@@ -7,89 +7,144 @@
 <meta name="description" content="{{ brand.tagline_en }} A weekly radar of the power and infrastructure behind AI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson-client/3.1.0/topojson-client.min.js"></script>
+<script>{{ vendor_d3 }}</script>
+<script>{{ vendor_topojson }}</script>
 <style>
-:root{--bg:#0b0f14;--panel:#111720;--line:#1f2a36;--line2:#2b3845;--fg:#e6edf3;--mute:#8b9bab;--dim:#5c6b7a;
-  --up:#3fb950;--down:#f85149;--warn:#d8a24a;--accent:#58a6ff;--gen:#e6edf3;--load:#58a6ff;
-  --h0:#121a24;--h1:#17304a;--h2:#1f4a73;--h3:#2a6aa6;--h4:#3b8fd9;--h5:#79b8ff}
+:root{--bg:#090d16;--panel:#0f1626;--line:#1a2439;--line2:#273655;--fg:#eef2fb;--mute:#aab7cf;--dim:#8291ad;
+  --up:#34d399;--down:#f87171;--warn:#f59e0b;--accent:#60a5fa;--blue:#3b82f6;--violet:#8b5cf6;--gen:#e8eefc;--load:#60a5fa;
+  --h0:#0f1626;--h1:#13223d;--h2:#17315c;--h3:#1f4a8f;--h4:#2f6bd1;--h5:#60a5fa}
 *{box-sizing:border-box}
 html{background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.45}
+body{margin:0;background:var(--bg);font-size:14px;background-image:radial-gradient(1100px 650px at -8% -12%,rgba(59,130,246,.28),transparent 62%),radial-gradient(800px 600px at 108% 104%,rgba(139,92,246,.16),transparent 62%);background-attachment:fixed;color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.5}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
-.wrap{max-width:1440px;margin:0 auto;padding:0 20px 40px}
-header{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 22px;padding:18px 0 12px;border-bottom:2px solid var(--fg)}
-header h1{margin:0;font-size:20px;font-weight:800;letter-spacing:.04em}
-header h1 .mark{display:inline-block;width:10px;height:18px;background:var(--warn);margin-right:10px;vertical-align:-2px}
-header .tag{color:var(--mute);font-size:12px}
-header .ticker{margin-left:auto;display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--mute)}
+.wrap{max-width:1440px;margin:0 auto;padding:0 28px 48px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 24px;padding:22px 0 14px;border-bottom:1px solid var(--line2)}
+header h1{margin:0;font-size:18px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+header h1 .mark{display:inline-block;width:9px;height:17px;background:linear-gradient(180deg,var(--blue),var(--violet));border-radius:2px;margin-right:12px;vertical-align:-2px}
+header .tag{color:var(--mute);font-size:13px;font-style:italic}
+header .ticker{margin-left:auto;display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:var(--mute);letter-spacing:.04em}
 header .ticker b{color:var(--fg);font-weight:600}
-.beta{font-size:11px;color:var(--mute);padding:8px 0 0}
-nav{display:flex;flex-wrap:wrap;gap:16px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:10px 0 0}
-nav a{color:var(--mute)}
-.grid{display:grid;gap:18px;margin-top:18px}
+.beta{display:none}
+nav{display:flex;flex-wrap:wrap;gap:22px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:12px 0 0}
+nav a{color:var(--mute);padding-bottom:3px}nav a:hover{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--accent)}
+.grid{display:grid;gap:22px;margin-top:22px}
+.intro{display:flex;flex-direction:column;gap:10px;padding:34px 0 10px;max-width:900px}
+.hero{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+@media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.hero .map{min-height:520px}
+.gh{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:980px){.hero,.gh{grid-template-columns:minmax(0,1fr)}}
+.headline{font-size:52px;font-weight:700;letter-spacing:-.02em;line-height:1.05;background:linear-gradient(90deg,#f3f6ff 0%,#8fb4ff 55%,#a78bfa 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:2px}
+.lead{font-size:19px;color:var(--fg);font-weight:500}
+.lead2{font-size:14px;color:var(--mute)}
+#map .map{min-height:520px}
+#map.full{position:fixed;inset:0;z-index:50;border-radius:0;margin:0;padding:24px 32px;overflow:auto;background:var(--bg)}
+#map.full .map{min-height:calc(100vh - 150px)}
+#map.full .map svg{height:calc(100vh - 170px);width:100%}
+.fsbtn{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);cursor:pointer;white-space:nowrap}
+#totop{position:fixed;right:22px;bottom:22px;width:40px;height:40px;border-radius:20px;border:1px solid var(--line2);background:#0f1626ee;color:var(--fg);font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:40;box-shadow:0 4px 18px rgba(0,0,0,.4)}
+#totop:hover{border-color:var(--accent);color:var(--accent)}
+#totop.show{display:flex}
+html{scroll-behavior:smooth}
+.glow{filter:url(#glow)}
 .g2{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
 .g2b{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
 @media (max-width:980px){.g2,.g2b{grid-template-columns:minmax(0,1fr)}}
-.panel{background:var(--panel);border:1px solid var(--line);padding:16px 18px;min-width:0;display:flex;flex-direction:column;gap:10px}
-.panel h2{margin:0;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:700;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
-.panel h2 .sub{font-weight:400;text-transform:none;letter-spacing:0;color:var(--dim)}
-.panel h2 .right{margin-left:auto;display:flex;gap:6px}
-.q{font-size:12px;color:var(--dim)}
-.fact{font-size:13px;border-left:3px solid var(--fg);padding:4px 10px;background:#0e141b;color:var(--fg)}
-.chip{border:1px solid var(--line2);border-radius:3px;padding:1px 8px;font-size:11px;color:var(--mute);background:transparent;cursor:pointer;font-family:inherit}
-.chip.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.tiles3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media (max-width:700px){.tiles,.tiles3{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.tile{border:1px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:2px}
-.tile .l{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
-.tile .v{font-size:24px;font-weight:700;line-height:1.1}
-.tile .v small{font-size:12px;font-weight:400;color:var(--mute)}
-.tile .d{font-size:11px;color:var(--mute)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px 24px 24px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.panel h2::before{content:'';display:inline-block;width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,var(--blue),var(--violet));margin-right:12px;vertical-align:-1px}
+.panel.foldable h2{cursor:pointer;user-select:none}
+.panel.foldable h2::before{content:'';width:14px;height:12px;border-radius:0;background:linear-gradient(135deg,var(--blue),var(--violet));clip-path:polygon(0 0,100% 0,50% 100%);margin-right:12px;vertical-align:-1px;transition:transform .15s}
+.panel.foldable.fold h2::before{transform:rotate(-90deg)}
+.panel.foldable h2:hover::before{background:var(--fg)}
+.panel h2 .toggle{display:none}
+.panel h2{margin:0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg);font-weight:700;display:flex;flex-wrap:wrap;align-items:baseline;gap:12px}
+.panel h2 .sub{font-weight:400;text-transform:none;letter-spacing:0;color:var(--mute);font-size:13px}
+.panel h2 .sub.mono{font-size:12px}
+.panel h2 .right{margin-left:auto;display:flex;gap:16px}
+.panel h2 .toggle:last-child{margin-left:auto}
+.panel h2 .info{display:inline-block;width:14px;height:14px;border:1px solid var(--line2);border-radius:7px;color:var(--mute);font-size:9px;line-height:12px;text-align:center;cursor:help;font-weight:400;letter-spacing:0;vertical-align:1px}
+.q{display:none;font-size:13px;color:var(--mute);line-height:1.5}
+body.howto .q{display:block}
+.howto-btn{margin-left:auto;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);cursor:pointer;border:1px solid var(--line2);border-radius:4px;padding:4px 10px;background:transparent;font-family:inherit}
+body.howto .howto-btn{background:var(--accent);color:#06101f;border-color:var(--accent)}
+.sub1{font-size:14px;color:var(--mute);padding:12px 0 0;max-width:820px;line-height:1.55}
+.sub1 b{color:var(--fg);font-weight:500}
+.heat .grp{grid-column:1 / -1;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding:8px 0 2px}
+.about{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:13px;color:var(--mute);line-height:1.6}
+.about b{display:block;color:var(--fg);font-weight:600;margin-bottom:4px}
+@media (max-width:980px){.about{grid-template-columns:minmax(0,1fr)}}
+.statline{display:flex;flex-wrap:wrap;gap:22px;font-size:13px;color:var(--mute)}
+.statline b{color:var(--fg);font-weight:600}
+.fact{font-size:15px;color:var(--fg);border-left:3px solid var(--accent);padding:4px 0 4px 14px;line-height:1.5}
+.fact:empty{display:none}
+.chip{border:0;background:transparent;padding:0 0 3px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);cursor:pointer;font-family:inherit}
+.chip:hover{color:var(--fg)}
+.chip.on{color:var(--fg);border-bottom:1px solid var(--accent)}
+.tag{border:1px solid var(--line2);border-radius:2px;padding:0 6px;font-size:11px;color:var(--mute);letter-spacing:.02em;white-space:nowrap}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 24px}
+.tiles3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 24px}
+@media (max-width:700px){.tiles,.tiles3{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}}
+.tile{border-left:1px solid var(--line2);padding:2px 0 2px 14px;display:flex;flex-direction:column;gap:3px}
+.tiles{gap:0 20px}
+.tile .l{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.tile .v{font-size:36px;font-weight:700;line-height:1.05;letter-spacing:-.01em}
+.tile .v small{font-size:14px;font-weight:400;color:var(--mute);margin-left:2px}
+.tile .d{font-size:13px;color:var(--mute)}
 .tile .d.up{color:var(--up)}.tile .d.down{color:var(--down)}.tile .d.flag{color:var(--warn)}
-.tile .n{font-size:10px;color:var(--dim)}
-.tile.hot{border-color:var(--fg)}
-.heat{display:grid;grid-template-columns:150px repeat(8,minmax(0,1fr));gap:3px;font-size:10px;color:var(--mute);align-items:center}
-.heat .wk{text-align:center}
-.heat .lay{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .n{font-size:12px;color:var(--dim)}
+.tile.hot .v{color:var(--warn);font-size:24px;line-height:1.3}
+.tile.hot{border-left-color:var(--warn)}
+.tiles3 .tile .v{font-size:22px}
+.heat{display:grid;grid-template-columns:150px repeat(8,minmax(0,1fr));gap:3px;font-size:11px;color:var(--mute);align-items:center}
+.heat .wk{text-align:center;letter-spacing:.04em}
+.heat .lay{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--mute);padding-right:6px}
 .heat .lay:hover{color:var(--fg)}
-.heat .c{height:18px;position:relative;display:flex;align-items:center;justify-content:center;color:#cfe3ff;font-size:10px;cursor:pointer}
+.heat .c{height:24px;border-radius:3px;position:relative;display:flex;align-items:center;justify-content:center;color:#eaf1ff;font-size:11px;font-weight:500;cursor:pointer}
+.heat .lgd{grid-column:1 / -1;display:flex;align-items:center;gap:6px;font-size:10px;color:var(--mute);padding-top:8px}
+.heat .lgd i{display:inline-block;width:18px;height:8px;border-radius:2px}
 .heat .c i{position:absolute;top:1px;right:3px;font-style:normal;font-size:8px;color:var(--warn)}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:6px 6px;border-bottom:1.5px solid var(--fg);font-weight:700}
-td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
-tr.row:hover td{background:#141c26}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);padding:6px 8px;border-bottom:1px solid var(--line2);font-weight:600}
+td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4}
+tr.row:hover td{background:#13203a}
 tr.row{cursor:pointer}
+tr.row.new td{background:#1a1a12}
+td.what{color:var(--mute);font-size:13px}
 .num{text-align:right;white-space:nowrap}
-.imp{letter-spacing:1px;color:var(--fg)}
+.imp{letter-spacing:1px;color:var(--fg);font-size:12px}
 .imp .o{color:var(--line2)}
-.map{position:relative;min-height:380px;background:#0a0e13;border:1px solid var(--line)}
+.map{position:relative;min-height:380px;background:#0a1120;border:1px solid var(--line);border-radius:6px;overflow:hidden}
 .map svg{display:block;width:100%;height:auto}
-.legend{position:absolute;right:10px;bottom:10px;font-size:11px;color:var(--mute);background:#0b0f14cc;border:1px solid var(--line2);padding:6px 10px;line-height:1.7}
-.legend .sw{display:inline-block;width:9px;height:9px;border-radius:5px;vertical-align:-1px;margin-right:4px}
-.tip{position:fixed;pointer-events:none;background:#0b0f14;border:1px solid var(--line2);color:var(--fg);padding:8px 10px;font-size:12px;max-width:320px;z-index:10;display:none}
+.legend{position:absolute;right:10px;bottom:10px;font-size:11px;color:var(--mute);background:#0f1626e6;border-radius:4px;border:1px solid var(--line2);padding:6px 10px;line-height:1.8;letter-spacing:.02em}
+.legend .sw{display:inline-block;width:9px;height:9px;border-radius:5px;vertical-align:-1px;margin-right:5px}
+.tip{position:fixed;pointer-events:none;background:#0f1626;border-radius:6px;border:1px solid var(--line2);color:var(--fg);padding:8px 10px;font-size:12px;max-width:320px;z-index:10;display:none;line-height:1.45}
 .circuit{position:relative;min-height:360px}
 .circuit svg{display:block;width:100%;height:auto}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 24px}
 @media (max-width:980px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.card{border:1px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:5px;cursor:pointer}
-.card:hover{border-color:var(--line2)}
-.card .nm{display:flex;justify-content:space-between;gap:8px;font-weight:600}
-.card .et{font-size:10px;color:var(--dim)}
+.card{border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:5px;cursor:pointer;background:#0c1322}
+.card:hover{border-color:var(--accent)}
+.card .nm{display:flex;justify-content:space-between;gap:8px;font-weight:600;align-items:baseline}
+.card .et{font-size:12px;color:var(--dim);letter-spacing:.02em}
 .card .spark{display:flex;gap:2px;align-items:flex-end;height:18px}
 .card .spark i{display:block;width:8px;background:var(--line2)}
-.card .spark i.now{background:var(--fg)}
+.card .spark i.now{background:var(--accent)}
 .filters{display:flex;flex-wrap:wrap;gap:8px}
-select,input{background:#0b0f14;color:var(--fg);border:1px solid var(--line2);padding:5px 8px;font-size:12px;font-family:inherit}
+select,input{background:#0a1120;color:var(--fg);border:1px solid var(--line2);border-radius:4px;padding:7px 10px;font-size:13px;font-family:inherit}
 input{flex:1;min-width:200px}
-.more{text-align:center;font-size:12px;color:var(--mute);padding:8px;cursor:pointer}
+.more{text-align:center;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);padding:10px;cursor:pointer}
 .more:hover{color:var(--fg)}
-.divider{text-align:center;font-size:11px;color:var(--dim);border-top:1px dashed var(--line2);padding-top:8px;margin-top:18px;letter-spacing:.08em}
-footer{margin-top:28px;border-top:1px solid var(--fg);padding-top:12px;font-size:11px;color:var(--mute);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
-.detail{font-size:12px;color:var(--mute);padding:6px 6px 10px 40px}
-.detail a{margin-left:8px}
+.divider{text-align:center;font-size:11px;color:var(--mute);padding-top:14px;margin-top:28px;letter-spacing:.18em}
+.panel.fold .body{display:none}
+.panel.fold .fact{margin-top:-4px}
+.panel h2 .toggle{margin-left:4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);cursor:pointer;font-weight:500;white-space:nowrap}
+.panel h2 .toggle::before{content:'▸ expand'}
+.panel:not(.fold) h2 .toggle::before{content:'▾ collapse'}
+.panel.fold .q{display:none}
+footer{margin-top:40px;border-top:1px solid var(--line2);padding-top:12px;font-size:11px;color:var(--mute);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+.detail{font-size:13px;color:var(--mute);padding:4px 8px 12px 44px;line-height:1.5}
 .stage0{opacity:.4}.stage1{opacity:.85}.stage2{opacity:1}
 </style>
 </head>
@@ -100,54 +155,59 @@ footer{margin-top:28px;border-top:1px solid var(--fg);padding-top:12px;font-size
   <span class="tag">{{ brand.tagline_en }}</span>
   <div class="ticker mono" id="ticker"></div>
 </header>
-<div class="beta">Beta · machine-scored · data backfilled from 15 Aug 2026 · analyst review begins W44 · every line on the board has a source</div>
-<nav><a href="#numbers">Numbers</a><a href="#activity">Activity</a><a href="#deals">Deals</a><a href="#map">Map</a><a href="#circuits">Circuits</a><a href="#feed">Signals</a><a href="#panel">The Panel</a><a href="latest-report.md">Weekly report</a></nav>
+<nav><a href="#numbers">Numbers</a><a href="#activity">Activity</a><a href="#deals">Deals</a><a href="#map">Map</a><a href="#circuits">Circuits</a><a href="#feed">Signals</a><a href="#panel">The Panel</a><a href="latest-report.md">Weekly report</a><a href="#about">About</a><button class="howto-btn" id="howto">How to read this board</button></nav>
 
-<div class="grid g2">
+<div class="intro"><div class="headline">Follow the current.</div>
+  <div class="lead">Who powers AI, who pays, and why now.</div>
+  <div class="lead2">A weekly radar of the electricity behind AI compute · updated Mondays · every line links to its source</div></div>
+<div class="grid hero">
   <section class="panel" id="numbers">
-    <h2>This week in numbers</h2>
-    <div class="q">Machine-counted, week over week. The two kinds of MW are never added together.</div>
+    <h2>This week in numbers <span class="info" title="Machine-counted, week over week. The two kinds of MW are never added together.">i</span></h2>
+    
     <div class="tiles" id="tiles1"></div>
-    <div class="tiles3" id="tiles2"></div>
+    <div class="statline" id="tiles2"></div>
     <div class="fact" id="fact1"></div>
   </section>
+  <section class="panel foldable" id="map">
+    <h2>Committed capacity <span class="info" title="Where the money lands. Dot = a project or contract in the last 8 weeks; size = MW; hollow = generation (nameplate), filled = data center (IT load); faded = announced, solid = contracted, ring = operational.">i</span><span class="toggle"></span><span class="fsbtn" id="fsbtn">⤢ Full screen</span><span class="right"><span class="chip on" data-kind="all">All</span><span class="chip" data-kind="nameplate">Generation</span><span class="chip" data-kind="it_load">Data centers</span></span></h2>
+    <div class="fact" id="fact4"></div>
+    <div class="body">
+    
+    <div class="map" id="mapbox"><div class="legend"><span class="sw" style="background:var(--load)"></span>Data center · IT load (MW)<br><span class="sw" style="border:2px solid var(--gen);background:transparent"></span>Generation · nameplate (MW)<br>faded = announced · solid = contracted · ring = operational<br><span class="sw" style="background:var(--warn);box-shadow:0 0 8px var(--warn)"></span>glow = this week</div></div>
+  </div>
+  </section>
+</div>
+<div class="grid gh">
   <section class="panel" id="activity">
-    <h2>Activity by layer <span class="sub" id="srcnote"></span></h2>
-    <div class="q">Cell shade = this week vs the layer's own 8-week average; number = distinct events; <span style="color:var(--warn)">▲</span> = an Impact-5 event that week. Click a layer to filter the signal feed.</div>
+    <h2>Activity by layer <span class="sub" id="srcnote"></span> <span class="info" title="Cell shade = this week vs the layer's own 8-week average; number = distinct events; ▲ = an Impact-5 event that week. Click a layer to filter the signal feed.">i</span></h2>
+    
     <div class="heat" id="heat"></div>
     <div class="fact" id="fact2"></div>
   </section>
-</div>
-
-<div class="grid g2b">
   <section class="panel" id="deals">
-    <h2>Biggest deals <span class="right" id="dealtabs"></span></h2>
-    <div class="q">Who pays whom, and how much. Parties in plain verbs; Size and Value in fixed units; figures tagged disclosed / reported / est.</div>
+    <h2>Biggest deals <span class="info" title="Who pays whom, and how much. Parties in plain verbs; Size and Value in fixed units; figures tagged disclosed / reported / est.">i</span><span class="right" id="dealtabs"></span></h2>
+    
     <div style="overflow-x:auto"><table id="dealtable"></table></div>
     <div class="fact" id="fact3"></div>
   </section>
-  <section class="panel" id="map">
-    <h2>Committed capacity <span class="right"><span class="chip on" data-kind="all">All</span><span class="chip" data-kind="nameplate">Generation</span><span class="chip" data-kind="it_load">Data centers</span></span></h2>
-    <div class="q">Where the money lands. Dot = a project or contract in the last 8 weeks; size = MW; hollow = generation (nameplate), filled = data center (IT load); faded = announced, solid = contracted, ring = operational.</div>
-    <div class="map" id="mapbox"><div class="legend"><span class="sw" style="background:var(--load)"></span>Data center · IT load (MW)<br><span class="sw" style="border:2px solid var(--gen);background:transparent"></span>Generation · nameplate (MW)<br>faded = announced · solid = contracted · ring = operational</div></div>
-    <div class="fact" id="fact4"></div>
-  </section>
 </div>
-
 <div class="grid">
-  <section class="panel" id="circuits">
-    <h2>Circuits <span class="sub">who is connected to whom</span> <span class="right"><span class="chip on" data-rel="all">All</span><span class="chip" data-rel="buys_power_from">Power</span><span class="chip" data-rel="invests_in">Investment</span><span class="chip" data-rel="supplies_to">Supply</span></span></h2>
-    <div class="q">Fixed layout: demand on the left, compute and development in the middle, supply on the right. The 15 largest relations on record; numbers written on the edges; this week's new edges highlighted. Solid = power or supply, dashed = investment.</div>
-    <div class="circuit" id="circuitbox"></div>
+  <section class="panel foldable fold" id="circuits">
+    <h2>Circuits <span class="sub">who is connected to whom</span> <span class="info" title="Fixed layout: demand on the left, compute and development in the middle, supply on the right. The 15 largest relations on record; numbers written on the edges; this week's new edges highlighted. Solid = power or supply, dashed = investment.">i</span><span class="toggle"></span><span class="right"><span class="chip on" data-rel="all">All</span><span class="chip" data-rel="buys_power_from">Power</span><span class="chip" data-rel="invests_in">Investment</span><span class="chip" data-rel="supplies_to">Supply</span></span></h2>
     <div class="fact" id="fact5"></div>
+    <div class="body">
+    
+    <div class="circuit" id="circuitbox"></div>
+  </div>
   </section>
 </div>
 
 <div class="divider">END OF THE BRIEF · BELOW: THE FULL FEED AND THE PANEL</div>
 
 <div class="grid">
-  <section class="panel" id="feed">
-    <h2>Signal feed <span class="sub mono" id="feedcount"></span></h2>
+  <section class="panel foldable fold" id="feed">
+    <h2>Signal feed <span class="sub mono" id="feedcount"></span><span class="toggle"></span></h2>
+    <div class="body">
     <div class="filters">
       <select id="fL"><option value="">All layers</option></select>
       <select id="fT"><option value="">All types</option></select>
@@ -158,25 +218,50 @@ footer{margin-top:28px;border-top:1px solid var(--fg);padding-top:12px;font-size
     </div>
     <div style="overflow-x:auto"><table id="feedtable"></table></div>
     <div class="more" id="feedmore"></div>
+  </div>
   </section>
 </div>
 
 <div class="grid">
-  <section class="panel" id="panel">
-    <h2>The Panel <span class="sub">the companies we track</span></h2>
-    <div class="q">Sorted by activity this week. Click a card to filter the feed.</div>
+  <section class="panel foldable fold" id="panel">
+    <h2>The Panel <span class="sub">the companies we track</span> <span class="info" title="Sorted by activity this week. Click a card to filter the feed.">i</span><span class="toggle"></span></h2>
+    <div class="body">
+    
     <div class="cards" id="cards"></div>
+    <div class="more" id="cardsmore"></div>
+  </div>
+  </section>
+</div>
+
+<div class="grid">
+  <section class="panel" id="about">
+    <h2>About this board</h2>
+    <div class="about">
+      <div><b>What it is</b>AI compute runs on electricity, and electricity is now the binding constraint: gas turbines are sold out for years, interconnection queues run five years, and hyperscalers are signing 20-year nuclear contracts. Current Board tracks that layer week by week — who supplies the power, who pays for it, and why now.</div>
+      <div><b>How it is made</b>Every week the pipeline collects public news for 38 tracked entities and ten value-chain layers, and Claude classifies each item: layer, type, importance 1–5, MW, money, location, and who-did-what-to-whom. The analyst reviews the top signals and writes the weekly view. The board is built only from whitelisted fields and checked for leaks before publishing.</div>
+      <div><b>Read the numbers carefully</b>Figures carry a source grade — disclosed, reported, or estimated — and two kinds of MW are never added: a power plant's nameplate capacity and a data center's IT load are different things. Importance is a machine score until the analyst overrides it. Click any line to reach its source.</div>
+    </div>
   </section>
 </div>
 
 <footer><span>{{ brand.footer_en }}</span><span>Free, public sources · classification by Claude, judgment by the analyst · <a href="https://github.com/wt-hsu/current-board">How the board is wired</a></span></footer>
 </div>
 <div class="tip" id="tip"></div>
+<button id="totop" aria-label="Back to top" title="Back to top">↑</button>
 
 <script id="data" type="application/json">{{ data_json }}</script>
 <script id="world" type="application/json">{{ world_json }}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
+document.querySelectorAll('.panel h2 .info').forEach(i => { const q = document.createElement('div'); q.className = 'q'; q.textContent = i.title; const h = i.closest('h2'); h.parentNode.insertBefore(q, h.nextSibling); });
+document.getElementById('howto').onclick = () => document.body.classList.toggle('howto');
+document.querySelectorAll('.panel.foldable h2').forEach(h => h.addEventListener('click', ev => { if (ev.target.closest('.right, .fsbtn, .info, select, input')) return; h.closest('.panel').classList.toggle('fold'); }));
+const fsbtn = document.getElementById('fsbtn'); fsbtn.onclick = () => { const m = document.getElementById('map'); m.classList.toggle('full'); fsbtn.textContent = m.classList.contains('full') ? '✕ Close' : '⤢ Full screen'; };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('map').classList.remove('full'); fsbtn.textContent = '⤢ Full screen'; } });
+const totop = document.getElementById('totop'); totop.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
+window.addEventListener('scroll', () => totop.classList.toggle('show', window.scrollY > 600), {passive: true});
+const unfold = id => document.getElementById(id)?.classList.remove('fold');
+document.querySelectorAll('nav a[href^="#"]').forEach(a => a.addEventListener('click', () => unfold(a.getAttribute('href').slice(1))));
 const L = (kind, code) => (D.labels[kind]?.[code]?.en) || (code || 'other');
 const LAYERS = Object.keys(D.labels.value_chain);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -242,29 +327,33 @@ const g = delta(N.gen, P.gen, fmtMwNum), lo = delta(N.load, P.load, fmtMwNum), d
 document.getElementById('tiles1').innerHTML = `
   <div class="tile"><div class="l">Generation contracted</div><div class="v mono">${N.gen ? fmtMwNum(N.gen) : '—'}</div><div class="d mono ${g.cls}">${g.txt}</div><div class="n">nameplate · PPAs signed · ≈ ${(N.gen/1000).toFixed(1)} large reactors</div></div>
   <div class="tile"><div class="l">DC load announced</div><div class="v mono">${N.load ? fmtMwNum(N.load) : '—'}</div><div class="d mono ${lo.cls}">${lo.txt}</div><div class="n">IT load · new campuses · de-duplicated</div></div>
-  <div class="tile"><div class="l">Deals</div><div class="v mono">${N.deals}</div><div class="d mono ${dl.cls}">${dl.txt}</div><div class="n">${Object.entries(N.dealsByType).map(([k,v]) => v + ' ' + L('relation_types',k)).concat(N.capex ? [N.capex + ' capex'] : []).join(' · ') || 'none yet'}</div></div>
-  <div class="tile"><div class="l">Disclosed value</div><div class="v mono">${N.disclosed ? fmtUsd(N.disclosed) : '—'}</div><div class="d mono">${N.disclosedN} of ${N.circuits} new relations disclosed</div><div class="n">no model estimates in this number</div></div>`;
+  <div class="tile"><div class="l">Disclosed value</div><div class="v mono">${N.disclosed ? fmtUsd(N.disclosed) : '—'}</div><div class="d mono">${N.disclosedN} of ${N.circuits} new relations disclosed</div><div class="n">no model estimates in this number</div></div>
+  <div class="tile hot"><div class="l">Hottest layer</div><div class="v">${hot ? L('value_chain', hot) : '—'}</div><div class="d flag mono">${prevHot && prevHot !== hot ? '⚑ was: ' + L('value_chain', prevHot) : '— unchanged'}</div><div class="n">largest move vs its 8-week average</div></div>`;
 document.getElementById('tiles2').innerHTML = `
-  <div class="tile"><div class="l">Funding raised · Sparks</div><div class="v mono">${N.funding ? fmtUsd(N.funding) : '—'}</div><div class="n">${N.fundN} round${N.fundN===1?'':'s'}</div></div>
-  <div class="tile"><div class="l">New circuits</div><div class="v mono">${N.circuits}</div><div class="n">first-seen counterparty pairs</div></div>
-  <div class="tile hot"><div class="l">Hottest layer</div><div class="v" style="font-size:17px">${hot ? L('value_chain', hot) : '—'}</div><div class="d flag mono">${prevHot && prevHot !== hot ? '⚑ was: ' + L('value_chain', prevHot) : '— unchanged'}</div></div>`;
+  <span>Deals <b class="mono">${N.deals}</b> <span class="mono ${dl.cls}" style="font-size:11px">${dl.txt.replace(' WoW','')}</span></span>
+  <span>Sparks · funding <b class="mono">${N.funding ? fmtUsd(N.funding) : '—'}</b> <span style="font-size:11px">${N.fundN} round${N.fundN===1?'':'s'}</span></span>
+  <span>New circuits <b class="mono">${N.circuits}</b> <span style="font-size:11px">first-seen pairs</span></span>`;
 
 // fact 1
 { const top = evWeek(D.week).sort((a,b) => (b.importance - a.importance) || ((b.capacity_mw||0)-(a.capacity_mw||0)))[0];
   const byLayer = {}; evWeek(D.week).forEach(e => { byLayer[e.value_chain] = (byLayer[e.value_chain]||0) + (e.capacity_mw||0); });
   const lead = Object.entries(byLayer).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById('fact1').textContent = !N.events ? 'A quiet week: no signals above the bar yet.' :
-    lead && lead[1] > 0 ? `${L('value_chain', lead[0])} led the week: ${fmtMwNum(lead[1])} across ${evWeek(D.week).filter(e=>e.value_chain===lead[0]).length} events.` :
+    lead && lead[1] > 0 ? `${L('value_chain', lead[0])} led the week: ${fmtMwNum(lead[1])} across ${(n => n + (n===1?' event':' events'))(evWeek(D.week).filter(e=>e.value_chain===lead[0]).length)}.` :
     top ? `Biggest signal this week: ${top.title}.` : ''; }
 
 // ---- activity grid ----
 { const h = document.getElementById('heat'); let html = '<div></div>' + WEEKS.map((w,i) => `<div class="wk ${i===7?'mono':''}" style="${i===7?'color:var(--fg);font-weight:700':''}">${w.slice(5)}</div>`).join('');
   const shade = z => z >= 2 ? 'var(--h5)' : z >= 1.2 ? 'var(--h4)' : z >= 0.5 ? 'var(--h3)' : z >= 0 ? 'var(--h2)' : z >= -0.5 ? 'var(--h1)' : 'var(--h0)';
-  LAYERS.forEach(l => { html += `<div class="lay" data-layer="${l}" title="${esc(L('value_chain',l))}">${esc(L('value_chain',l))}</div>`;
+  const GROUPS = [['Demand', ['compute_demand','dc_development']], ['Supply', ['generation_nuclear','generation_other','storage','offtake_markets']], ['Enablers', ['transmission_grid','dc_physical','energy_software','policy_regulation']]];
+  const grouped = GROUPS.flatMap(g => g[1].filter(l => LAYERS.includes(l))); const rest = LAYERS.filter(l => !grouped.includes(l) && l !== 'other');
+  const ORDER = GROUPS.map(g => [g[0], g[1].filter(l => LAYERS.includes(l))]).concat(rest.length ? [['Other', rest]] : []);
+  ORDER.forEach(([gname, ls]) => { html += `<div class="grp">${gname}</div>`; ls.forEach(l => { html += `<div class="lay" data-layer="${l}" title="${esc(L('value_chain',l))}">${esc(L('value_chain',l))}</div>`;
     grid[l].forEach((c,i) => { const xs = grid[l].map(x=>x.n); const hist = xs.slice(0, Math.max(1,i)); const m = hist.reduce((a,b)=>a+b,0)/hist.length; const sd = Math.sqrt(hist.reduce((a,b)=>a+(b-m)*(b-m),0)/hist.length)||1; const z = i===0 ? 0 : (c.n-m)/sd;
-      html += `<div class="c" data-layer="${l}" data-week="${WEEKS[i]}" style="background:${c.n ? shade(z) : 'var(--h0)'}" title="${esc(L('value_chain',l))} · ${WEEKS[i]} · ${c.n} events${c.max?` · top impact ${c.max}`:''}">${c.n || ''}${c.max >= 5 ? '<i>▲</i>' : ''}</div>`; }); });
+      html += `<div class="c" data-layer="${l}" data-week="${WEEKS[i]}" style="background:${c.n ? shade(z) : 'var(--h0)'}" title="${esc(L('value_chain',l))} · ${WEEKS[i]} · ${c.n} events${c.max?` · top impact ${c.max}`:''}">${c.n || ''}${c.max >= 5 ? '<i>▲</i>' : ''}</div>`; }); }); });
+  html += `<div class="lgd"><span>below average</span><i style="background:var(--h0)"></i><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i><span>far above its 8-week average</span></div>`;
   h.innerHTML = html;
-  h.querySelectorAll('.lay,.c').forEach(el => el.onclick = () => { fL.value = el.dataset.layer; if (el.dataset.week === D.week) fW.value = 'week'; else fW.value = 'all'; renderFeed(); location.hash = '#feed'; });
+  h.querySelectorAll('.lay,.c').forEach(el => el.onclick = () => { fL.value = el.dataset.layer; if (el.dataset.week === D.week) fW.value = 'week'; else fW.value = 'all'; renderFeed(); unfold('feed'); location.hash = '#feed'; });
   const ranked = Object.entries(Z).filter(([l,z]) => grid[l][7].n > 0).sort((a,b)=>b[1]-a[1]);
   const f2 = document.getElementById('fact2');
   if (!ranked.length) f2.textContent = 'No layer moved above its baseline this week.';
@@ -285,15 +374,15 @@ function renderDeals(tab){
   const rows = dealRows(tab);
   const extra = tab === 'PPA' ? '<th class="num">Term</th>' : tab === 'Funding' ? '<th>Round</th>' : '';
   let html = `<tr><th>Date</th><th>Parties</th><th>What it is</th><th class="num">Size</th><th class="num">Value</th>${extra}<th></th></tr>`;
-  if (!rows.length) html += '<tr><td colspan="7" class="q">No deals on record for this type yet.</td></tr>';
+  if (!rows.length) html += '<tr><td colspan="7" style="color:var(--dim)">No deals on record for this type yet.</td></tr>';
   rows.forEach(x => {
     const parties = x.kind === 'rel' ? `<b>${esc(x.r.subject_name)}</b> ${esc(L('relation_types', x.r.relation_type))} <b>${esc(x.r.object_name)}</b>` : `<b>${esc((x.sig.companies||[])[0] || x.sig.source)}</b> builds out`;
     const what = x.sig ? esc(x.sig.summary || x.sig.title) : esc(x.r.subject_name + ' → ' + x.r.object_name);
     const vs = x.kind === 'rel' ? (x.r.value_source || 'est.') : 'est.';
-    const tag = x.value == null ? '' : `<span class="q" style="font-size:10px"> ${vs === 'disclosed' ? '' : vs === 'reported' ? 'rep.' : 'est.'}</span>`;
+    const tag = x.value == null ? '' : `<span style="font-size:9px;color:var(--dim)"> ${vs === 'disclosed' ? '' : vs === 'reported' ? 'rep.' : 'est.'}</span>`;
     const link = x.kind === 'rel' ? x.r.source_url : x.sig.link;
     const extraTd = tab === 'PPA' ? `<td class="num mono">${x.r?.term_years ? x.r.term_years + 'y' : '—'}</td>` : tab === 'Funding' ? `<td class="mono">${esc(x.r?.relation_type ? '' : '')}—</td>` : '';
-    html += `<tr class="row" ${x.isNew ? 'style="background:#0f1a26"' : ''}><td class="mono">${esc(x.date.slice(5))}</td><td>${parties}${x.isNew ? ' <span class="q" style="color:var(--warn);font-size:10px">NEW</span>' : ''}</td><td class="q" style="color:var(--mute)">${what.slice(0,140)}</td><td class="num mono">${x.size ? fmtMw(x.size) : '—'}</td><td class="num mono">${x.value ? fmtUsd(x.value) : '—'}${tag}</td>${extraTd}<td>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">↗</a>` : ''}</td></tr>`;
+    html += `<tr class="row${x.isNew ? ' new' : ''}"><td class="mono">${esc(x.date.slice(5))}</td><td>${parties}${x.isNew ? ' <span class="mono" style="color:var(--warn);font-size:9px;letter-spacing:.12em">NEW</span>' : ''}</td><td class="what">${what.slice(0,120)}</td><td class="num mono">${x.size ? fmtMw(x.size) : '—'}</td><td class="num mono">${x.value ? fmtUsd(x.value) : '—'}${tag}</td>${extraTd}<td>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">↗</a>` : ''}</td></tr>`;
   });
   document.getElementById('dealtable').innerHTML = html;
 }
@@ -310,14 +399,15 @@ const showTip = (ev, html) => { tip.innerHTML = html; tip.style.display = 'block
 const hideTip = () => tip.style.display = 'none';
 function renderMap(kind){
   const box = document.getElementById('mapbox'); box.querySelectorAll('svg').forEach(s => s.remove());
-  const W = 900, H = 420;
-  const svg = d3.select(box).insert('svg', ':first-child').attr('viewBox', `0 0 ${W} ${H}`);
+  const W = 900, H = 460;
+  const svg = d3.select(box).insert('svg', ':first-child').attr('viewBox', `0 0 ${W} ${H}`).attr('preserveAspectRatio', 'xMidYMid meet');
   const world = JSON.parse(document.getElementById('world').textContent);
   const land = topojson.feature(world, world.objects.countries);
   const proj = d3.geoNaturalEarth1().fitSize([W, H], {type:'Sphere'});
   const path = d3.geoPath(proj);
-  svg.append('path').datum({type:'Sphere'}).attr('d', path).attr('fill', '#0d131a');
-  svg.append('g').selectAll('path').data(land.features).join('path').attr('d', path).attr('fill', '#1a2430').attr('stroke', '#0b0f14').attr('stroke-width', .5);
+  const defs = svg.append('defs'); const f = defs.append('filter').attr('id', 'glow').attr('x', '-100%').attr('y', '-100%').attr('width', '300%').attr('height', '300%'); f.append('feGaussianBlur').attr('stdDeviation', 6);
+  svg.append('path').datum({type:'Sphere'}).attr('d', path).attr('fill', '#0a1120');
+  svg.append('g').selectAll('path').data(land.features).join('path').attr('d', path).attr('fill', '#17223a').attr('stroke', '#0a1120').attr('stroke-width', .5);
   const pts = EV.filter(e => e.lat != null && e.lng != null && e.capacity_mw && WEEKS.includes(e.week) && (kind === 'all' || e.capacity_kind === kind));
   const r = d3.scaleSqrt().domain([0, Math.max(100, d3.max(pts, p => p.capacity_mw) || 100)]).range([2, 22]);
   const stageCls = s => s === 'operational' ? 'stage2' : s === 'contracted' || s === 'under_construction' ? 'stage1' : 'stage0';
@@ -325,8 +415,9 @@ function renderMap(kind){
   pts.sort((a,b) => b.capacity_mw - a.capacity_mw).forEach(p => {
     const [x, y] = proj([p.lng, p.lat]) || [null, null]; if (x == null) return;
     const isLoad = p.capacity_kind === 'it_load';
+    if (p.week === D.week || p.week === PREV) gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw) + 6).attr('fill', p.week === D.week ? 'var(--warn)' : 'var(--blue)').attr('opacity', p.week === D.week ? .55 : .35).attr('class', 'glow');
     const c = gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw)).attr('class', stageCls(p.project_stage))
-      .attr('fill', isLoad ? 'var(--load)' : 'transparent').attr('fill-opacity', isLoad ? .7 : 0).attr('stroke', isLoad ? 'var(--load)' : 'var(--gen)').attr('stroke-width', isLoad ? 1 : 2).style('cursor', 'pointer');
+      .attr('fill', isLoad ? 'var(--load)' : '#0a1120').attr('fill-opacity', isLoad ? .85 : .9).attr('stroke', isLoad ? '#bcd3ff' : 'var(--gen)').attr('stroke-width', isLoad ? 1 : 2).style('cursor', 'pointer');
     if (p.project_stage === 'operational') gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw) + 3).attr('fill', 'none').attr('stroke', 'var(--warn)').attr('stroke-width', 1);
     c.on('mousemove', ev => showTip(ev, `<b>${esc(p.title)}</b><br>${fmtMwNum(p.capacity_mw)} · ${esc(p.capacity_kind === 'it_load' ? 'IT load' : 'nameplate')} · ${esc(p.project_stage || 'stage n/a')}<br>${esc(p.location_name || '')}${p.grid_region ? ' · ' + esc(p.grid_region) : ''} · ${esc(p.date)}<br><span style="color:var(--mute)">${esc(p.source)} · Impact ${p.importance}</span>`)).on('mouseleave', hideTip).on('click', () => window.open(p.link, '_blank'));
   });
@@ -344,29 +435,37 @@ function renderCircuits(rel){
   const box = document.getElementById('circuitbox'); box.innerHTML = '';
   let rels = D.relations.filter(r => rel === 'all' || r.relation_type === rel).filter(r => r.relation_type !== 'regulates');
   rels.sort((a,b) => ((b.value_usd||0) + (b.capacity_mw||0)*1e6) - ((a.value_usd||0) + (a.capacity_mw||0)*1e6)); rels = rels.slice(0, 15);
-  if (!rels.length) { box.innerHTML = '<div class="q" style="padding:20px">No relations on record yet.</div>'; document.getElementById('fact5').textContent = ''; return; }
+  if (!rels.length) { box.innerHTML = '<div style="padding:20px;color:var(--dim)">No relations on record yet.</div>'; document.getElementById('fact5').textContent = ''; return; }
   const nodes = new Map();
   rels.forEach(r => { [[r.subject_slug, r.subject_name], [r.object_slug, r.object_name]].forEach(([s,n]) => { const key = s || n; if (!nodes.has(key)) nodes.set(key, {key, name: n, col: column(s, n), deg: 0}); nodes.get(key).deg++; }); });
   const cols = [[],[],[]]; nodes.forEach(n => cols[n.col].push(n)); cols.forEach(c => c.sort((a,b) => b.deg - a.deg));
-  const W = 1100, rowH = 38, H = Math.max(300, 60 + rowH * Math.max(...cols.map(c => c.length)));
-  const X = [150, 550, 950];
+  const W = 1200, rowH = 44, H = Math.max(320, 70 + rowH * Math.max(...cols.map(c => c.length)));
+  const X = [160, 600, 1040];
   cols.forEach((c, ci) => c.forEach((n, i) => { n.x = X[ci]; n.y = 60 + (H - 80) * (c.length === 1 ? .5 : i / (c.length - 1)); }));
   const svg = d3.select(box).append('svg').attr('viewBox', `0 0 ${W} ${H}`);
-  [['DEMAND', X[0]], ['COMPUTE / DEVELOPMENT', X[1]], ['SUPPLY', X[2]]].forEach(([t,x]) => svg.append('text').attr('x', x).attr('y', 22).attr('text-anchor', 'middle').attr('fill', 'var(--dim)').attr('font-size', 10).attr('letter-spacing', 2).text(t));
+  const gd = svg.append('defs').append('linearGradient').attr('id', 'nodegrad').attr('x1', 0).attr('x2', 1).attr('y1', 0).attr('y2', 1); gd.append('stop').attr('offset', '0%').attr('stop-color', '#3b82f6'); gd.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
+  [['DEMAND', X[0]], ['COMPUTE / DEVELOPMENT', X[1]], ['SUPPLY', X[2]]].forEach(([t,x]) => svg.append('text').attr('x', x).attr('y', 22).attr('text-anchor', 'middle').attr('fill', 'var(--mute)').attr('font-size', 11).attr('font-weight', 700).attr('letter-spacing', 2.5).attr('font-family', 'Inter, sans-serif').text(t));
   const maxV = d3.max(rels, r => (r.value_usd||0) + (r.capacity_mw||0)*1e6) || 1;
+  const edges = svg.append('g'), nodesG = svg.append('g'), labels = svg.append('g');
   rels.forEach(r => { const a = nodes.get(r.subject_slug || r.subject_name), b = nodes.get(r.object_slug || r.object_name); const isNew = r.week_first === D.week;
     const w = 1 + 4 * (((r.value_usd||0) + (r.capacity_mw||0)*1e6) / maxV);
-    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2 - (a.x === b.x ? 0 : 10);
-    svg.append('path').attr('d', `M${a.x},${a.y} Q${mx},${my - 20} ${b.x},${b.y}`).attr('fill', 'none').attr('stroke', isNew ? 'var(--warn)' : 'var(--line2)').attr('stroke-width', w).attr('stroke-dasharray', r.relation_type === 'invests_in' ? '6 4' : null).attr('opacity', .9);
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    const sameCol = a.x === b.x; const cx = sameCol ? a.x + 120 : mx, cy = sameCol ? my : my - Math.abs(b.y - a.y) * .15;
+    edges.append('path').attr('d', `M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`).attr('fill', 'none').attr('stroke', isNew ? 'var(--warn)' : '#3a4a6a').attr('stroke-width', w).attr('stroke-dasharray', r.relation_type === 'invests_in' ? '6 4' : null).attr('opacity', .95);
     const label = [r.capacity_mw ? fmtMw(r.capacity_mw) : null, r.value_usd ? fmtUsd(r.value_usd) : null, r.term_years ? r.term_years + 'y' : null].filter(Boolean).join(' · ') || L('relation_types', r.relation_type);
-    const t = svg.append('text').attr('x', mx).attr('y', my - 14).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', isNew ? 'var(--warn)' : 'var(--mute)').attr('font-family', 'JetBrains Mono, monospace').text(label + (isNew ? ' · NEW' : '')).style('cursor', 'pointer');
+    const text = label + (isNew ? ' · NEW' : ''); const lx = sameCol ? a.x + 60 : mx, ly = sameCol ? my : (my + cy) / 2;
+    const lg = labels.append('g').attr('transform', `translate(${lx},${ly})`).style('cursor', 'pointer');
+    const pw = text.length * 6.2 + 14;
+    lg.append('rect').attr('x', -pw/2).attr('y', -9).attr('width', pw).attr('height', 18).attr('rx', 9).attr('fill', '#0f1626').attr('stroke', isNew ? 'var(--warn)' : 'var(--line2)').attr('stroke-width', 1);
+    lg.append('text').attr('text-anchor', 'middle').attr('dy', 3.5).attr('font-size', 10).attr('fill', isNew ? 'var(--warn)' : 'var(--fg)').attr('font-family', 'JetBrains Mono, monospace').text(text);
+    const t = lg;
     t.on('mousemove', ev => showTip(ev, `<b>${esc(r.subject_name)}</b> ${esc(L('relation_types', r.relation_type))} <b>${esc(r.object_name)}</b><br>${label}<br><span style="color:var(--mute)">${esc(r.value_source || 'estimated')} · confidence ${Math.round((r.confidence||0)*100)}% · first seen ${esc((r.first_seen||'').slice(0,10))}</span>`)).on('mouseleave', hideTip).on('click', () => r.source_url && window.open(r.source_url, '_blank'));
   });
-  nodes.forEach(n => { const g = svg.append('g').attr('transform', `translate(${n.x},${n.y})`).style('cursor', 'pointer').on('click', () => { if (byCompany[n.key]) { fE.value = n.key; fW.value = 'all'; renderFeed(); location.hash = '#feed'; } });
-    const wdt = Math.max(90, n.name.length * 7 + 20);
-    g.append('rect').attr('x', -wdt/2).attr('y', -13).attr('width', wdt).attr('height', 26).attr('fill', n.col === 2 ? '#0b0f14' : n.col === 0 ? '#2b3845' : '#1f2a36').attr('stroke', n.col === 2 ? 'var(--fg)' : 'none').attr('stroke-width', 1.5);
-    g.append('text').attr('text-anchor', 'middle').attr('dy', 4).attr('font-size', 11).attr('fill', 'var(--fg)').text(n.name); });
-  const newest = rels.filter(r => r.week_first === D.week)[0];
+  nodes.forEach(n => { const g = nodesG.append('g').attr('transform', `translate(${n.x},${n.y})`).style('cursor', 'pointer').on('click', () => { if (byCompany[n.key]) { fE.value = n.key; fW.value = 'all'; renderFeed(); unfold('feed'); location.hash = '#feed'; } });
+    const wdt = Math.max(100, n.name.length * 7.5 + 24);
+    g.append('rect').attr('x', -wdt/2).attr('y', -14).attr('width', wdt).attr('height', 28).attr('rx', 6).attr('fill', n.col === 0 ? 'url(#nodegrad)' : n.col === 1 ? '#1a2439' : '#0e1626').attr('stroke', n.col === 2 ? 'var(--accent)' : n.col === 1 ? 'var(--line2)' : 'none').attr('stroke-width', 1.5);
+    g.append('text').attr('text-anchor', 'middle').attr('dy', 4).attr('font-size', 12).attr('font-weight', n.col === 0 ? 600 : 500).attr('fill', 'var(--fg)').attr('font-family', 'Inter, sans-serif').text(n.name); });
+  const newest = D.relations.filter(r => r.week_first === D.week).sort((a,b)=>((b.value_usd||0)+(b.capacity_mw||0)*1e6)-((a.value_usd||0)+(a.capacity_mw||0)*1e6))[0];
   document.getElementById('fact5').textContent = newest ? `${newest.subject_name}–${newest.object_name} is new on the board this week${newest.mentions > 1 ? ', reported ' + newest.mentions + ' times' : ''}.` : `No new relations this week; ${rels.length} largest relations on record shown.`;
 }
 document.querySelectorAll('#circuits .chip').forEach(c => c.onclick = () => { document.querySelectorAll('#circuits .chip').forEach(x => x.classList.remove('on')); c.classList.add('on'); renderCircuits(c.dataset.rel); });
@@ -377,35 +476,38 @@ const fL = document.getElementById('fL'), fT = document.getElementById('fT'), fE
 LAYERS.forEach(l => fL.insertAdjacentHTML('beforeend', `<option value="${l}">${esc(L('value_chain',l))}</option>`));
 Object.keys(D.labels.signal_types).forEach(t => fT.insertAdjacentHTML('beforeend', `<option value="${t}">${esc(L('signal_types',t))}</option>`));
 D.companies.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(c => fE.insertAdjacentHTML('beforeend', `<option value="${c.slug}">${esc(c.name)}</option>`));
-let feedLimit = 10;
+let feedLimit = 6;
 function renderFeed(){
   const q = fQ.value.trim().toLowerCase();
   const rows = D.signals.filter(s => (fW.value !== 'week' || weekIds.has(s.id)) && (!fL.value || s.value_chain === fL.value) && (!fT.value || s.signal_type === fT.value) && (!fE.value || (s.company_slugs||[]).includes(fE.value)) && (s.importance||1) >= +fI.value && (!q || (s.title + ' ' + (s.summary||'')).toLowerCase().includes(q)))
     .sort((a,b) => (b.date||'').localeCompare(a.date||'') || b.importance - a.importance);
   document.getElementById('feedcount').textContent = `· showing ${Math.min(feedLimit, rows.length)} of ${rows.length}`;
   let html = '<tr><th>Date</th><th>Impact</th><th>Signal</th><th>Layer</th><th>Type</th><th class="num">Figures</th><th>Source</th></tr>';
-  if (!rows.length) html += '<tr><td colspan="7" class="q">No signals match.</td></tr>';
+  if (!rows.length) html += '<tr><td colspan="7" style="color:var(--dim)">No signals match.</td></tr>';
   rows.slice(0, feedLimit).forEach(s => {
     const figs = [s.capacity_mw ? fmtMw(s.capacity_mw) + (s.capacity_kind === 'it_load' ? ' load' : '') : null, s.deal_value_usd ? fmtUsd(s.deal_value_usd) : null].filter(Boolean).join(' · ') || '—';
-    html += `<tr class="row" data-id="${s.id}"><td class="mono">${esc((s.date||'').slice(5))}</td><td>${imp(s.importance||1)}</td><td><b>${esc(s.title)}</b>${s.companies.length ? `<div class="q">${esc(s.companies.join(', '))}</div>` : ''}</td><td class="q">${esc(L('value_chain', s.value_chain))}</td><td class="q">${esc(L('signal_types', s.signal_type))}</td><td class="num mono">${figs}</td><td><a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(s.source || 'source')} ↗</a></td></tr>`;
+    html += `<tr class="row" data-id="${s.id}"><td class="mono">${esc((s.date||'').slice(5))}</td><td>${imp(s.importance||1)}</td><td><b style="font-weight:600">${esc(s.title)}</b>${s.companies.length ? `<div style="font-size:11px;color:var(--mute)">${esc(s.companies.join(', '))}</div>` : ''}</td><td><span class="tag">${esc(L('value_chain', s.value_chain))}</span></td><td><span class="tag">${esc(L('signal_types', s.signal_type))}</span></td><td class="num mono">${figs}</td><td><a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(s.source || 'source')} ↗</a></td></tr>`;
     html += `<tr class="dt" data-for="${s.id}" style="display:none"><td colspan="7" class="detail">${esc(s.summary || '')}${s.location_name ? ` · <span class="mono">${esc(s.location_name)}${s.grid_region ? ' · ' + esc(s.grid_region) : ''}</span>` : ''}${s.project_stage ? ` · ${esc(s.project_stage)}` : ''}</td></tr>`;
   });
   const t = document.getElementById('feedtable'); t.innerHTML = html;
   t.querySelectorAll('tr.row').forEach(r => r.onclick = ev => { if (ev.target.tagName === 'A') return; const d = t.querySelector(`tr.dt[data-for="${r.dataset.id}"]`); d.style.display = d.style.display === 'none' ? '' : 'none'; });
   const more = document.getElementById('feedmore');
-  more.textContent = rows.length > feedLimit ? `▾ Show all ${rows.length} signals` : rows.length > 10 ? '▴ Show fewer' : '';
-  more.onclick = () => { feedLimit = rows.length > feedLimit ? rows.length : 10; renderFeed(); };
+  more.textContent = rows.length > feedLimit ? `▾ Show all ${rows.length} signals` : rows.length > 6 ? '▴ Show fewer' : '';
+  more.onclick = () => { feedLimit = rows.length > feedLimit ? rows.length : 6; renderFeed(); };
 }
-[fL, fT, fE, fI, fW].forEach(el => el.onchange = () => { feedLimit = 10; renderFeed(); }); fQ.oninput = () => { feedLimit = 10; renderFeed(); };
+[fL, fT, fE, fI, fW].forEach(el => el.onchange = () => { feedLimit = 6; renderFeed(); }); fQ.oninput = () => { feedLimit = 6; renderFeed(); };
 renderFeed();
 
 // ---- the panel ----
 { const weekBy = {}; sigWeek(D.week).forEach(s => (s.company_slugs||[]).forEach(k => weekBy[k] = (weekBy[k]||0) + 1));
   const hist = {}; D.companies.forEach(c => hist[c.slug] = WEEKS.map(w => sigWeek(w).filter(s => (s.company_slugs||[]).includes(c.slug)).length));
   const cards = D.companies.filter(c => c.status === 'active').sort((a,b) => (weekBy[b.slug]||0) - (weekBy[a.slug]||0) || (b.signal_count||0) - (a.signal_count||0));
-  document.getElementById('cards').innerHTML = cards.map(c => { const h = hist[c.slug]; const mx = Math.max(1, ...h);
-    return `<div class="card" data-slug="${c.slug}"><div class="nm"><span>${esc(c.name)}</span><span class="chip">${esc(L('entity_types', c.entity_type))}</span></div><div class="et mono">${esc(L('value_chain', c.value_chain))}${c.region ? ' · ' + esc(c.region) : ''}</div><div class="spark">${h.map((v,i) => `<i class="${i===7?'now':''}" style="height:${Math.max(2, 18*v/mx)}px" title="${WEEKS[i]}: ${v}"></i>`).join('')}</div><div class="et">${weekBy[c.slug]||0} this week · ${c.signal_count||0} in 90 days · ${c.relation_count||0} circuits</div></div>`; }).join('');
-  document.querySelectorAll('.card').forEach(el => el.onclick = () => { fE.value = el.dataset.slug; fW.value = 'all'; feedLimit = 10; renderFeed(); location.hash = '#feed'; }); }
+  let cardLimit = 8;
+  const renderCards = () => { document.getElementById('cards').innerHTML = cards.slice(0, cardLimit).map(c => { const h = hist[c.slug]; const mx = Math.max(1, ...h);
+    return `<div class="card" data-slug="${c.slug}"><div class="nm"><span>${esc(c.name)}</span><span class="tag">${esc(L('entity_types', c.entity_type))}</span></div><div class="et mono">${esc(L('value_chain', c.value_chain))}${c.region ? ' · ' + esc(c.region) : ''}</div><div class="spark">${h.map((v,i) => `<i class="${i===7?'now':''}" style="height:${Math.max(2, 18*v/mx)}px" title="${WEEKS[i]}: ${v}"></i>`).join('')}</div><div class="et">${weekBy[c.slug]||0} this week · ${c.signal_count||0} in 90 days · ${c.relation_count||0} circuits</div></div>`; }).join('');
+    document.querySelectorAll('.card').forEach(el => el.onclick = () => { fE.value = el.dataset.slug; fW.value = 'all'; feedLimit = 6; renderFeed(); unfold('feed'); location.hash = '#feed'; });
+    const m = document.getElementById('cardsmore'); m.textContent = cards.length > cardLimit ? `▾ Show all ${cards.length} on the panel` : cards.length > 8 ? '▴ Show fewer' : ''; m.onclick = () => { cardLimit = cards.length > cardLimit ? cards.length : 8; renderCards(); }; };
+  renderCards(); }
 </script>
 </body>
 </html>

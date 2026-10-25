@@ -93,6 +93,31 @@ def cmd_dashboard(conn, args) -> int:
     return 0
 
 
+def cmd_dedupe(conn, args) -> int:
+    """Mark near-duplicate titles among unextracted signals as 'dup' so extraction skips them.
+    Key = first 9 normalised words of the title; the oldest row with a key is kept, later ones are duplicates
+    (the one with a body wins when the candidates were collected the same day)."""
+    import re as _re
+    rows = conn.execute("SELECT id, title, published_at, length(body) AS blen, status FROM signals ORDER BY published_at, id").fetchall()
+    seen: dict[str, int] = {}
+    marked = 0
+    norm = lambda t: " ".join(_re.sub(r"[^a-z0-9 ]+", " ", (t or "").lower()).split()[:9])
+    for r in rows:
+        key = norm(r["title"])
+        if len(key) < 20:
+            continue
+        if key in seen:
+            if r["status"] == "new":
+                conn.execute("UPDATE signals SET status='dup' WHERE id=?", (r["id"],))
+                marked += 1
+        else:
+            seen[key] = r["id"]
+    conn.commit()
+    left = conn.execute("SELECT COUNT(*) FROM signals WHERE status='new'").fetchone()[0]
+    print(f"dedupe: {marked} near-duplicate titles marked 'dup'; {left} left to extract")
+    return 0
+
+
 def cmd_fetch_bodies(conn, args) -> int:
     """Fetch article text for signals collected with --no-fetch, highest importance first."""
     from .collectors.fetch import fetch_article
@@ -277,6 +302,7 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--limit", type=int, default=None)
     s.add_argument("--redo", action="store_true", help="re-queue extracted signals (importance >= --min-importance) and extract again")
     s.add_argument("--min-importance", type=int, default=4)
+    sub.add_parser("dedupe", help="mark near-duplicate titles as 'dup' so extraction skips them")
     s = sub.add_parser("fetch-bodies", help="fetch article text for signals collected with --no-fetch")
     s.add_argument("--min-importance", type=int, default=4)
     s.add_argument("--limit", type=int, default=None)
@@ -320,7 +346,7 @@ def main(argv: list[str] | None = None) -> int:
 
     conn = db.connect()
     handler = {
-        "run": cmd_run, "collect": cmd_collect, "extract": cmd_extract, "fetch-bodies": cmd_fetch_bodies, "report": cmd_report, "dashboard": cmd_dashboard,
+        "run": cmd_run, "collect": cmd_collect, "extract": cmd_extract, "dedupe": cmd_dedupe, "fetch-bodies": cmd_fetch_bodies, "report": cmd_report, "dashboard": cmd_dashboard,
         "review": cmd_review, "workbench": cmd_workbench, "note": cmd_note, "view": cmd_view, "candidates": cmd_candidates,
         "accept": cmd_accept, "reject": cmd_reject, "log": cmd_log, "status": cmd_status,
     }[args.cmd]

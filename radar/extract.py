@@ -9,6 +9,7 @@ from __future__ import annotations
 import logging
 import json
 import os
+import sys
 import sqlite3
 from datetime import date
 from enum import Enum
@@ -258,22 +259,35 @@ def run_extraction(conn: sqlite3.Connection, client=None, limit: int | None = No
     index = AliasIndex(conn)
     names = [r["name"] for r in conn.execute("SELECT name FROM companies WHERE status='active' ORDER BY name")]
     stats = {"processed": 0, "relevant": 0, "failed": 0, "rounds": 0, "relations": 0, "candidates": 0, "unmatched": 0}
-    for signal in db.new_signals(conn, limit):
+    # API calls run in parallel (RADAR_WORKERS, default 6); every database write stays on this thread, in order.
+    from concurrent.futures import ThreadPoolExecutor
+    workers = max(1, int(os.environ.get("RADAR_WORKERS", "6")))
+    signals = db.new_signals(conn, limit)
+    total = len(signals)
+
+    def call(signal):
         try:
-            data = extract_one(client, signal, names, model)
+            return signal, extract_one(client, signal, names, model), None
         except Exception as exc:  # noqa: BLE001 - keep going, mark the row
-            log.warning("extraction failed for signal %s (%s): %s", signal["id"], signal["title"][:60], exc)
-            conn.execute("UPDATE signals SET status='failed' WHERE id=?", (signal["id"],))
+            return signal, None, exc
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for i, (signal, data, exc) in enumerate(pool.map(call, signals), 1):
+            if exc is not None:
+                log.warning("extraction failed for signal %s (%s): %s", signal["id"], signal["title"][:60], exc)
+                conn.execute("UPDATE signals SET status='failed' WHERE id=?", (signal["id"],))
+                conn.commit()
+                stats["failed"] += 1
+                continue
+            db.save_extraction(conn, signal["id"], data)
+            s = apply_extraction(conn, signal, data, index, week)
             conn.commit()
-            stats["failed"] += 1
-            continue
-        db.save_extraction(conn, signal["id"], data)
-        s = apply_extraction(conn, signal, data, index, week)
-        conn.commit()
-        stats["processed"] += 1
-        stats["relevant"] += int(bool(data.get("relevant")))
-        for k in ("rounds", "relations", "candidates", "unmatched"):
-            stats[k] += s[k]
+            stats["processed"] += 1
+            stats["relevant"] += int(bool(data.get("relevant")))
+            for k in ("rounds", "relations", "candidates", "unmatched"):
+                stats[k] += s[k]
+            if i % 50 == 0:
+                print(f"extract: {i}/{total} · relevant {stats['relevant']} · failed {stats['failed']}", file=sys.stderr)
     if stats["processed"]:
         stats["candidates_cooccurrence"] = propose_from_cooccurrence(conn, week)
         conn.commit()

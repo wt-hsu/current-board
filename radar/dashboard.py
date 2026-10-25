@@ -91,7 +91,10 @@ def render_html(snap: dict) -> str:
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=False)
     payload = json.dumps(build_payload(snap), ensure_ascii=False).replace("</", "<\\/")
     world = WORLD.read_text(encoding="utf-8") if WORLD.exists() else '{"type":"Topology","objects":{"countries":{"type":"GeometryCollection","geometries":[]}},"arcs":[]}'
-    return env.get_template("dashboard.html.j2").render(data_json=payload, world_json=world, week=snap["week"], brand=BRAND)
+    vendor_d3 = (TEMPLATES / "vendor-d3.min.js").read_text(encoding="utf-8")          # D3 7, ISC — inlined so the page works offline and without a CDN
+    vendor_topojson = (TEMPLATES / "vendor-topojson.min.js").read_text(encoding="utf-8")  # topojson-client 3, ISC
+    return env.get_template("dashboard.html.j2").render(data_json=payload, world_json=world, vendor_d3=vendor_d3,
+                                                        vendor_topojson=vendor_topojson, week=snap["week"], brand=BRAND)
 
 
 def write_dashboard(conn: sqlite3.Connection, week: str, out_dir: Path = DOCS_DIR) -> Path:

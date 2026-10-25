@@ -57,6 +57,7 @@ limits:
   max_items_per_query: 20
   lookback_days: 10          # the weekly run only looks at the last N days
   backfill_days: 90          # an entity collected for the first time gets N days of history
+  backfill_items_per_query: 40   # per date window on a --since backfill; 100 produced ~9k items for 38 entities, 40 is plenty
   fetch_article_body: true
   body_max_chars: 6000
 
