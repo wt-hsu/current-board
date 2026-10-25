@@ -53,6 +53,15 @@ def cmd_collect(conn, args) -> int:
 def cmd_extract(conn, args) -> int:
     from .extract import run_extraction
 
+    if getattr(args, "redo", False):
+        # re-queue already-extracted signals (e.g. a cheap first pass) for a better model; relations/candidates
+        # are upserted, so re-running is idempotent.
+        min_imp = int(getattr(args, "min_importance", None) or 4)
+        n = conn.execute("UPDATE signals SET status='new' WHERE status='extracted' AND relevant=1 AND importance>=?",
+                         (min_imp,)).rowcount
+        conn.commit()
+        print(f"extract: re-queued {n} signals with importance >= {min_imp}", file=sys.stderr)
+
     run_id = db.start_run(conn, "extract")
     try:
         stats = run_extraction(conn, limit=args.limit, week=args.week)
@@ -81,6 +90,29 @@ def cmd_dashboard(conn, args) -> int:
     _sync(conn)
     path = write_dashboard(conn, args.week, DOCS_DIR)
     print(f"dashboard: {path}")
+    return 0
+
+
+def cmd_fetch_bodies(conn, args) -> int:
+    """Fetch article text for signals collected with --no-fetch, highest importance first."""
+    from .collectors.fetch import fetch_article
+
+    sources = load_sources()
+    body_max = int((sources.get("limits") or {}).get("body_max_chars", 6000))
+    min_imp = int(args.min_importance or 1)
+    rows = conn.execute(
+        """SELECT id, url, title FROM signals WHERE (body IS NULL OR length(body) < 200)
+             AND (importance >= ? OR status='new') ORDER BY importance DESC, published_at DESC LIMIT ?""",
+        (min_imp, int(args.limit or 100000))).fetchall()
+    done = 0
+    for r in rows:
+        resolved, body = fetch_article(r["url"], body_max)
+        if body or resolved:
+            db.update_signal_body(conn, r["id"], resolved, body)
+        if body:
+            done += 1
+        conn.commit()
+    print(f"fetch-bodies: {done}/{len(rows)} bodies fetched")
     return 0
 
 
@@ -243,6 +275,11 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--window-days", type=int, default=14)
     s = sub.add_parser("extract", help="run Claude extraction on new items")
     s.add_argument("--limit", type=int, default=None)
+    s.add_argument("--redo", action="store_true", help="re-queue extracted signals (importance >= --min-importance) and extract again")
+    s.add_argument("--min-importance", type=int, default=4)
+    s = sub.add_parser("fetch-bodies", help="fetch article text for signals collected with --no-fetch")
+    s.add_argument("--min-importance", type=int, default=4)
+    s.add_argument("--limit", type=int, default=None)
     sub.add_parser("report", help="write reports/<week>.md (private) and <week>.public.md")
     sub.add_parser("dashboard", help="write docs/index.html (public, whitelisted)")
 
@@ -283,7 +320,7 @@ def main(argv: list[str] | None = None) -> int:
 
     conn = db.connect()
     handler = {
-        "run": cmd_run, "collect": cmd_collect, "extract": cmd_extract, "report": cmd_report, "dashboard": cmd_dashboard,
+        "run": cmd_run, "collect": cmd_collect, "extract": cmd_extract, "fetch-bodies": cmd_fetch_bodies, "report": cmd_report, "dashboard": cmd_dashboard,
         "review": cmd_review, "workbench": cmd_workbench, "note": cmd_note, "view": cmd_view, "candidates": cmd_candidates,
         "accept": cmd_accept, "reject": cmd_reject, "log": cmd_log, "status": cmd_status,
     }[args.cmd]

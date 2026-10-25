@@ -13,9 +13,10 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 from .config import BRAND, DOCS_DIR, REPORTS_DIR
-from .queries import snapshot
+from .queries import recent_signals, snapshot
 
 TEMPLATES = Path(__file__).parent / "templates"
+WORLD = TEMPLATES / "world-110m.json"  # Natural Earth 1:110m countries via world-atlas (ISC), inlined into the page
 
 # Field names that must never appear anywhere in the public payload (SPEC-v3 §2.3 "private").
 PRIVATE_KEYS = {
@@ -89,11 +90,14 @@ def build_payload(snap: dict) -> dict:
 def render_html(snap: dict) -> str:
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=False)
     payload = json.dumps(build_payload(snap), ensure_ascii=False).replace("</", "<\\/")
-    return env.get_template("dashboard.html.j2").render(data_json=payload, week=snap["week"], brand=BRAND)
+    world = WORLD.read_text(encoding="utf-8") if WORLD.exists() else '{"type":"Topology","objects":{"countries":{"type":"GeometryCollection","geometries":[]}},"arcs":[]}'
+    return env.get_template("dashboard.html.j2").render(data_json=payload, world_json=world, week=snap["week"], brand=BRAND)
 
 
 def write_dashboard(conn: sqlite3.Connection, week: str, out_dir: Path = DOCS_DIR) -> Path:
     snap = snapshot(conn, week, private=False)   # the dashboard never sees the private snapshot
+    # the board reads 8 weeks of activity and 90 days of feed; lift the default 600-row cap but drop the marginal (1/5)
+    snap["signals_recent"] = [s for s in recent_signals(conn, days=90, limit=4000, private=False) if (s.get("importance") or 1) >= 2]
     html = render_html(snap)
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / "index.html"
