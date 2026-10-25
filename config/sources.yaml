@@ -1,0 +1,68 @@
+# 資料來源。全部免費、免金鑰。
+
+google_news:
+  hl: en-US
+  gl: US
+  ceid: "US:en"
+  # 依對象類型選用不同搜尋句型；{name} 會被對象名稱取代。找不到對應類型就用 default。
+  company_queries:
+    default: '"{name}" (data center OR "data centre" OR power OR grid OR nuclear OR electricity OR PPA OR gigawatt OR megawatt)'
+    hyperscaler: '"{name}" (data center OR nuclear OR "power purchase" OR PPA OR gigawatt OR capex OR "capital expenditure" OR grid OR electricity)'
+    ai_lab: '"{name}" (data center OR Stargate OR gigawatt OR power OR nuclear OR electricity OR "compute deal" OR campus)'
+    neocloud: '"{name}" (data center OR gigawatt OR megawatt OR power OR financing OR raises OR debt OR campus)'
+    utility: '"{name}" (data center OR nuclear OR PPA OR "power purchase" OR restart OR gigawatt OR megawatt OR rate case OR interconnection)'
+    public_company: '"{name}" (data center OR order OR backlog OR earnings OR guidance OR gigawatt OR megawatt OR acquisition OR capacity)'
+    private_startup: '"{name}" (funding OR raises OR raised OR partnership OR launches OR acquires OR acquired OR pilot OR megawatt)'
+  investor_query: '"{name}" (energy OR grid OR nuclear OR "data center" OR power) (invests OR leads OR backs OR portfolio)'
+
+# 發現新對象：這些 query 不綁定特定公司，抽取時由 Claude 判斷是否值得追蹤。依價值鏈各層一到兩句。
+discovery:
+  queries:
+    # compute_demand
+    - '"data center" (gigawatt OR "GW") (campus OR announces OR plans) power'
+    - '"AI data center" (power deal OR "power purchase agreement" OR "behind the meter")'
+    # generation_nuclear
+    - 'nuclear (data center OR hyperscaler OR "AI") (agreement OR restart OR SMR OR "power purchase")'
+    # generation_other
+    - '("fuel cell" OR "gas turbine" OR "onsite power" OR geothermal) "data center" (deal OR agreement OR order)'
+    # transmission_grid
+    - '(transformer OR "grid equipment" OR interconnection OR transmission) "data center" (shortage OR backlog OR queue OR order)'
+    # storage
+    - '("battery storage" OR "energy storage") ("data center" OR "AI") (financing OR agreement OR gigawatt)'
+    # dc_physical
+    - '("liquid cooling" OR "power distribution" OR UPS) "data center" (order OR contract OR backlog)'
+    # dc_development
+    - '"data center" (REIT OR developer OR campus) (acquires OR financing OR "joint venture" OR land)'
+    # offtake_markets
+    - '"power purchase agreement" (hyperscaler OR "data center" OR Microsoft OR Google OR Amazon OR Meta)'
+    # policy_regulation
+    - '(FERC OR "public utility commission" OR legislature) "data center" (rate OR tariff OR interconnection OR rule)'
+    # energy_software (Sparks)
+    - '("virtual power plant" OR "grid software" OR "energy forecasting" OR "grid analytics") startup (raises OR funding OR "Series A" OR seed)'
+  feeds:
+    - name: DCD
+      url: https://www.datacenterdynamics.com/en/rss/
+    - name: Utility Dive
+      url: https://www.utilitydive.com/feeds/news/
+    - name: Data Center Frontier
+      url: https://feeds.feedburner.com/DataCenterFrontier
+    - name: CTVC
+      url: https://www.ctvc.co/rss/
+    - name: Canary Media
+      url: https://www.canarymedia.com/rss
+    - name: Latitude Media
+      url: https://www.latitudemedia.com/feed
+
+limits:
+  max_items_per_query: 20
+  lookback_days: 10          # 每週例行抓取只看最近 N 天
+  backfill_days: 90          # 名單上第一次出現的對象，第一次抓回溯 N 天
+  fetch_article_body: true
+  body_max_chars: 6000
+
+# 待審清單（review queue）規則：每週只把這些放到你面前，目標 8–12 則
+review:
+  min_importance: 4          # 重要度 >= 4 全部進清單
+  money_importance: 3        # 重要度 3 且有金額或 MW 數的也進
+  max_items: 12
+  max_candidates: 3

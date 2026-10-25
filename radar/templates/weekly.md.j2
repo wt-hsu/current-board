@@ -1,0 +1,113 @@
+# {{ brand.name }} · {{ brand.weekly_en }} — {{ week }}
+## {{ brand.name_zh }} · {{ brand.weekly_zh }}
+
+_{{ 'Private edition · analyst notes included' if private else 'Public edition · facts only' }} · generated {{ generated_at[:16].replace('T', ' ') }} UTC · {{ signals_week|length }} signals · {{ relations_week|length }} new relations · {{ funding_week|length }} funding rounds · {{ companies|length }} entities on the panel_
+
+---
+
+## 1. Headlines · 本週頭條
+{% if top_signals %}
+{% for s in top_signals %}
+### {{ loop.index }}. {{ s.title }}
+- **{{ vc(s.value_chain) }} / {{ vc(s.value_chain, 'zh') }}** · {{ sig(s.signal_type) }} · importance **{{ s.importance_final }}/5**{% if private and s.importance_override and s.importance_override != s.importance_machine %} (machine said {{ s.importance_machine }}){% endif %}{% if s.deal_value_usd %} · {{ usd(s.deal_value_usd) }}{% endif %}{% if s.capacity_mw %} · {{ mw(s.capacity_mw) }}{% endif %}
+- {{ s.summary }}
+- {{ s.summary_zh or '' }}
+- {{ s.company_names|join(', ') if s.company_names else '' }}{{ ' · ' if s.company_names }}[{{ s.source or 'source' }}]({{ s.link }}) · {{ s.date }}
+{% if private and (s.note_zh or s.note_en) %}
+- 📝 **Analyst / 分析師**：{{ s.note_zh or '' }}{{ ' / ' if s.note_zh and s.note_en }}{{ s.note_en or '' }}
+{% endif %}
+{% if private and s.deal_logic %}
+- 🔍 **Deal logic / 交易邏輯**：{{ s.deal_logic }}
+{% endif %}
+{% endfor %}
+{% else %}
+_No signals at importance 4 or above this week. · 本週沒有重要度 4 以上的訊號。_
+{% endif %}
+
+## 2. Circuits · 新關係（誰對誰做了什麼）
+{% if relations_week %}
+| Date | Subject | Relation | Object | Value | Capacity | Term | Source |
+|---|---|---|---|---|---|---|---|
+{% for r in relations_week -%}
+| {{ r.first_seen }} | {{ r.subject_name }} | {{ rel(r.relation_type) }} / {{ rel(r.relation_type, 'zh') }} | {{ r.object_name }} | {{ usd(r.value_usd) }} | {{ mw(r.capacity_mw) }} | {{ (r.term_years ~ ' y') if r.term_years else '—' }} | [{{ r.source or 'link' }}]({{ r.source_url }}) |
+{% endfor %}
+{% else %}
+_No new relations recorded this week. · 本週沒有新的關係。_
+{% endif %}
+
+## 3. Sparks · 新創募資
+{% if funding_week %}
+| Date | Company | Layer | Round | Amount | Lead | Also in | Confidence | Source |
+|---|---|---|---|---|---|---|---|---|
+{% for r in funding_week -%}
+| {{ r.date }} | {{ r.company_name }} | {{ vc(r.value_chain) }} | {{ r.round_type|replace('_', ' ') }} | {{ r.amount_raw or '—' }} | {{ r.leads|join(', ') or '—' }} | {{ r.participants|join(', ') or '—' }} | {{ r.confidence or '—' }} | [link]({{ r.source_url }}) |
+{% endfor %}
+{% else %}
+_No funding rounds detected this week. · 本週沒有偵測到募資。_
+{% endif %}
+
+## 4. By layer · 依價值鏈分層
+{% for code, meta in taxonomy.value_chain.items() %}
+{% set group = signals_week|selectattr('value_chain', 'equalto', code)|list %}
+{% if group %}
+### {{ meta.label_en }} · {{ meta.label_zh }} ({{ group|length }})
+{% for s in group[:6] %}
+- **{{ s.importance_final }}/5** · {{ sig(s.signal_type) }} · {{ s.summary_zh or s.summary }} — {{ s.company_names|join(', ') if s.company_names else s.source }} · [{{ s.source or 'source' }}]({{ s.link }})
+{% endfor %}
+{% if group|length > 6 %}
+- _… and {{ group|length - 6 }} more in the dashboard feed._
+{% endif %}
+{% endif %}
+{% endfor %}
+
+## 5. The Panel · 追蹤對象動態
+{% set active = companies|selectattr('signal_count')|list %}
+{% for code, meta in taxonomy.value_chain.items() %}
+{% set group = [] %}
+{% for c in companies if c.value_chain == code %}{% set n = signals_week|selectattr('company_slugs', 'contains', c.slug)|list|length %}{% if n %}{% set _ = group.append((c, n)) %}{% endif %}{% endfor %}
+{% if group %}
+- **{{ meta.label_en }}**: {% for c, n in group %}{{ c.name }} ({{ n }}){{ ', ' if not loop.last }}{% endfor %}
+{% endif %}
+{% endfor %}
+{% if not signals_week %}
+_Quiet week on the panel. · 本週名單上沒有動靜。_
+{% endif %}
+
+## 6. Proposed additions · 建議新增
+{% if candidates %}
+{% for cd in candidates[:3] %}
+- **{{ cd.name }}**{% if cd.domain %} ({{ cd.domain }}){% endif %} · {{ et(cd.entity_type) }} · {{ vc(cd.value_chain) }}{% if private %} · score {{ '%.1f'|format(cd.score) }} · {{ cd.mentions }} mention{{ 's' if cd.mentions != 1 }} · via {{ cd.source }}{% endif %}
+{% if private %}
+  {{ cd.why_relevant or '' }}{{ ' [first seen](' ~ cd.first_url ~ ')' if cd.first_url else '' }}
+  Accept: `radar accept "{{ cd.name }}"` · Reject: `radar reject "{{ cd.name }}"`
+{% endif %}
+{% endfor %}
+{% else %}
+_No new candidates proposed. · 沒有新的候選。_
+{% endif %}
+{% if private and review_queue %}
+
+## 7. Review queue · 待審清單（{{ review_queue|selectattr('reviewed', 'equalto', false)|list|length }} unreviewed）
+{% for s in review_queue %}
+- {{ '✅' if s.reviewed else '⬜' }} **#{{ s.id }}** · {{ s.importance_machine }}/5 · {{ s.reasons|join(', ') }} · {{ s.title }} · [{{ s.source or 'link' }}]({{ s.link }})
+{% endfor %}
+{% endif %}
+
+---
+
+## {{ 'This week\'s view' if not private else 'Analyst view' }} · 本週觀點
+{% if weekly_view and (weekly_view.draft_zh or weekly_view.draft_en) %}
+{% if weekly_view.draft_zh %}
+{{ weekly_view.draft_zh }}
+
+{% endif %}
+{% if weekly_view.draft_en %}
+{{ weekly_view.draft_en }}
+{% endif %}
+{% else %}
+_{{ 'Not written yet. Say "起草本週觀點" to draft it.' if private else 'No public commentary this week.' }}_
+{% endif %}
+
+---
+_{{ brand.footer_en }} · {{ brand.footer_zh }}_
+_Data quality: collected {{ stats.collected }} · extracted {{ stats.extracted }} · pending {{ stats.pending }} · failed (all time) {{ stats.failed }} · no article body {{ stats.no_body }} · relations on record {{ stats.relations_total }}{{ ' · last run `' ~ stats.last_run.stage ~ '` ' ~ stats.last_run.started_at if stats.last_run else '' }}_

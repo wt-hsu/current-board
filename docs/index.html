@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Current Board · 2026-W43</title>
+<meta name="description" content="The power behind AI, on one board. Weekly radar of the power and infrastructure behind AI.">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0f1110; --surface:#171a18; --surface-2:#1f2321; --line:#2a2f2c; --line-strong:#3a403c;
+  --text:#f1f2ec; --text-2:#c2c5ba; --muted:#848a80;
+  --accent:#f2b705; --accent-soft:#5c4600;
+  --l0:#f2b705; --l1:#4f9df7; --l2:#e2693b; --l3:#2fb67f; --l4:#c48dff; --l5:#ff6f91; --l6:#36c3d6; --l7:#a6c33a; --l8:#9c8cf0; --l9:#f08a5d; --l10:#8a8a8a;
+  --mono:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,"Inter","Noto Sans TC","PingFang TC","Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--sans)}
+a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--line-strong)}
+a:hover{color:var(--text);border-color:var(--text-2)}
+.wrap{max-width:1380px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;padding:6px 0 16px;border-bottom:1px solid var(--line)}
+header h1{font:700 20px/1.2 var(--sans);letter-spacing:.01em;margin:0}
+header h1 .zh{color:var(--muted);font-weight:500;margin-left:8px;font-size:15px}
+header h1 .mark{display:inline-block;width:10px;height:18px;background:var(--accent);border-radius:2px;vertical-align:-3px;margin-right:8px}
+header .tag{font:12px var(--sans);color:var(--text-2)}
+header .meta{font:12px var(--mono);color:var(--muted)}
+header nav{margin-left:auto;display:flex;flex-wrap:wrap;gap:12px;font:12px var(--mono);text-transform:uppercase;letter-spacing:.06em;align-items:center}
+header nav a{border:0;color:var(--muted)} header nav a:hover{color:var(--text)}
+.lang{display:inline-flex;border:1px solid var(--line-strong);border-radius:4px;overflow:hidden}
+.lang button{background:none;border:0;color:var(--muted);font:11px var(--mono);padding:4px 8px;cursor:pointer}
+.lang button.on{background:var(--accent);color:#111}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.tile .k{font:11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.tile .v{font:600 28px/1.1 var(--sans);margin-top:6px;font-variant-numeric:tabular-nums}
+.tile .d{font-size:12px;color:var(--text-2);margin-top:4px}
+section{margin-top:30px}
+h2{font:600 13px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--text-2);margin:0 0 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h2 .zh{font-family:var(--sans);text-transform:none;letter-spacing:0;color:var(--muted);font-weight:500}
+h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.grid2{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;min-width:0}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.filters select,.filters input{background:var(--surface-2);color:var(--text);border:1px solid var(--line-strong);border-radius:4px;padding:6px 8px;font:12px var(--mono);max-width:100%}
+.filters input{flex:1;min-width:160px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font:11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line-strong);white-space:nowrap}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:var(--surface-2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px;white-space:nowrap}
+td.date{font:12px var(--mono);color:var(--text-2);white-space:nowrap}
+.sum{color:var(--text-2);font-size:12.5px;margin-top:3px}
+.tag{display:inline-block;font:11px var(--mono);padding:1px 6px;border-radius:3px;border:1px solid var(--line-strong);color:var(--text-2);margin-right:4px;white-space:nowrap}
+.tag.type{border-color:transparent;background:var(--surface-2)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.imp{display:inline-flex;gap:2px;vertical-align:middle}
+.imp i{width:6px;height:12px;border-radius:2px;background:var(--line-strong)}
+.imp i.on{background:var(--accent)}
+.layerhead{font:600 12px var(--mono);color:var(--text-2);margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line-strong);border-radius:6px;padding:10px 12px;cursor:pointer}
+.card:hover{background:var(--surface-2)}
+.card.active{outline:1px solid var(--accent)}
+.card .n{font-weight:600}
+.card .m{font:11px var(--mono);color:var(--muted);margin-top:2px}
+.card .s{font-size:12px;color:var(--text-2);margin-top:6px;display:flex;justify-content:space-between}
+.card .s b{color:var(--text);font-variant-numeric:tabular-nums}
+.chart{height:150px;display:flex;align-items:flex-end;gap:6px;padding:8px 0 0;position:relative}
+.chart .bar{flex:1;background:var(--l1);border-radius:3px 3px 0 0;min-height:2px;position:relative;opacity:.9}
+.chart .bar.cur{background:var(--accent);outline:1px solid var(--text-2)}
+.chart .lbl{position:absolute;top:100%;left:0;right:0;text-align:center;font:10px var(--mono);color:var(--muted);margin-top:4px}
+.chart .val{position:absolute;bottom:100%;left:0;right:0;text-align:center;font:10px var(--mono);color:var(--text-2);margin-bottom:2px}
+.axis{height:1px;background:var(--line-strong)}
+.chartpad{padding-bottom:18px}
+.empty{color:var(--muted);font:12px var(--mono);padding:18px 0;text-align:center}
+.hbar{display:grid;grid-template-columns:minmax(120px,190px) 1fr auto;gap:8px 10px;align-items:center;font-size:12px}
+.hbar .track{height:14px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.hbar .fill{height:100%;border-radius:3px}
+.hbar .n{font:12px var(--mono);color:var(--text-2);text-align:right;min-width:2ch}
+.rel{font-size:13px}
+.rel .arrow{color:var(--accent);font-family:var(--mono);margin:0 6px}
+.view{white-space:pre-wrap;font-size:14px;line-height:1.7;color:var(--text-2)}
+footer{margin-top:40px;font:12px var(--sans);color:var(--muted);border-top:1px solid var(--line);padding-top:12px;line-height:1.7}
+footer .slogan{color:var(--text-2);font-weight:600}
+.toggle{font:11px var(--mono);color:var(--muted);cursor:pointer;border:1px solid var(--line-strong);border-radius:4px;padding:3px 8px;background:none}
+.toggle.on{color:var(--text);border-color:var(--text-2)}
+code{font:12px var(--mono);background:var(--surface-2);padding:1px 5px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1><span class="mark"></span>Current Board<span class="zh">電流看板</span></h1>
+  <div class="tag" data-i18n="tagline"></div>
+  <div class="meta" id="meta"></div>
+  <nav>
+    <a href="#board" data-i18n="nav_board"></a><a href="#circuits">Circuits</a><a href="#sparks">Sparks</a><a href="#panel">The Panel</a><a href="#candidates" data-i18n="nav_cand"></a><a href="latest-report.md" data-i18n="nav_report"></a>
+    <span class="lang"><button id="lang-en">EN</button><button id="lang-zh">中文</button></span>
+  </nav>
+</header>
+
+<div class="tiles" id="tiles"></div>
+
+<div class="grid2">
+  <div class="panel chartpad">
+    <h2><span data-i18n="chart_weeks"></span></h2>
+    <div class="chart" id="chart-weeks"></div><div class="axis"></div>
+  </div>
+  <div class="panel">
+    <h2><span data-i18n="chart_layers"></span></h2>
+    <div class="hbar" id="chart-layers"></div>
+  </div>
+</div>
+
+<section id="view" hidden>
+  <h2><span data-i18n="view_h"></span></h2>
+  <div class="panel view" id="view-body"></div>
+</section>
+
+<section id="board">
+  <h2><span data-i18n="board_h"></span> <button class="toggle on" id="tgl-week" data-i18n="this_week"></button><button class="toggle" id="tgl-all" data-i18n="last_90"></button></h2>
+  <div class="panel">
+    <div class="filters">
+      <select id="f-layer"></select>
+      <select id="f-type"></select>
+      <select id="f-entity"></select>
+      <select id="f-imp"><option value="1">≥ 1</option><option value="3">≥ 3</option><option value="4">≥ 4</option><option value="5">5</option></select>
+      <input id="f-q" data-i18n-ph="search">
+    </div>
+    <div class="tablewrap"><table><thead><tr><th data-i18n="th_date"></th><th data-i18n="th_imp"></th><th data-i18n="th_layer"></th><th data-i18n="th_type"></th><th data-i18n="th_signal"></th><th data-i18n="th_figures"></th><th data-i18n="th_source"></th></tr></thead><tbody id="t-signals"></tbody></table></div>
+    <div class="empty" id="e-signals" hidden data-i18n="no_match"></div>
+  </div>
+</section>
+
+<section id="circuits">
+  <h2>Circuits <span class="zh" data-i18n="circuits_zh"></span></h2>
+  <div class="panel tablewrap"><table><thead><tr><th data-i18n="th_date"></th><th data-i18n="th_relation"></th><th class="num" data-i18n="th_value"></th><th class="num" data-i18n="th_capacity"></th><th class="num" data-i18n="th_term"></th><th class="num" data-i18n="th_conf"></th><th data-i18n="th_source"></th></tr></thead><tbody id="t-rel"></tbody></table>
+  <div class="empty" id="e-rel" hidden data-i18n="no_rel"></div></div>
+</section>
+
+<section id="sparks">
+  <h2>Sparks <span class="zh" data-i18n="sparks_zh"></span></h2>
+  <div class="panel tablewrap"><table><thead><tr><th data-i18n="th_date"></th><th data-i18n="th_company"></th><th data-i18n="th_layer"></th><th data-i18n="th_round"></th><th class="num" data-i18n="th_amount"></th><th class="num">≈ USD</th><th data-i18n="th_lead"></th><th data-i18n="th_also"></th><th data-i18n="th_conf"></th><th>Src</th></tr></thead><tbody id="t-funding"></tbody></table>
+  <div class="empty" id="e-funding" hidden data-i18n="no_funding"></div></div>
+</section>
+
+<section id="panel">
+  <h2>The Panel <span class="zh" data-i18n="panel_zh"></span> <span class="zh" data-i18n="panel_hint"></span></h2>
+  <div id="cards"></div>
+</section>
+
+<section id="candidates">
+  <h2><span data-i18n="cand_h"></span></h2>
+  <div class="panel tablewrap"><table><thead><tr><th data-i18n="th_company"></th><th data-i18n="th_entity_type"></th><th data-i18n="th_layer"></th><th class="num" data-i18n="th_mentions"></th><th data-i18n="th_first_seen"></th></tr></thead><tbody id="t-cand"></tbody></table>
+  <div class="empty" id="e-cand" hidden data-i18n="no_cand"></div></div>
+</section>
+
+<footer id="foot"></footer>
+</div>
+
+<script id="data" type="application/json">{"brand": {"name": "Current Board", "name_zh": "電流看板", "tagline_en": "The power behind AI, on one board.", "tagline_zh": "AI 背後的電，一板看盡。", "weekly_en": "On the Board", "weekly_zh": "本週上板", "sparks": "Sparks", "footer_en": "Every line on the board has a source.", "footer_zh": "板上每一條都有來源。"}, "week": "2026-W43", "generated_at": "2026-10-25T12:39:39+00:00", "labels": {"value_chain": {"compute_demand": {"en": "AI Compute Demand", "zh": "算力需求端"}, "generation_nuclear": {"en": "Nuclear Generation", "zh": "核能發電"}, "generation_other": {"en": "Gas, Fuel Cell & Onsite Power", "zh": "其他發電"}, "transmission_grid": {"en": "Transmission & Grid Equipment", "zh": "輸配電與電網設備"}, "storage": {"en": "Energy Storage", "zh": "儲能"}, "dc_physical": {"en": "Data Center Power & Cooling", "zh": "資料中心實體層"}, "dc_development": {"en": "Data Center Development & REIT", "zh": "資料中心開發"}, "offtake_markets": {"en": "PPAs, Offtake & Markets", "zh": "購電與市場"}, "energy_software": {"en": "Energy Software", "zh": "能源軟體"}, "policy_regulation": {"en": "Policy & Regulation", "zh": "政策與監管"}, "other": {"en": "Other", "zh": "其他"}}, "signal_types": {"funding": {"en": "Funding", "zh": "募資"}, "m_and_a": {"en": "M&A", "zh": "併購"}, "offtake": {"en": "PPA / Offtake", "zh": "購電與長約"}, "capex": {"en": "Capex & Buildout", "zh": "資本支出與建廠"}, "earnings": {"en": "Earnings & Guidance", "zh": "財報與財測"}, "partnership": {"en": "Partnership", "zh": "合作與客戶"}, "product": {"en": "Product & Technology", "zh": "產品與技術"}, "supply_chain": {"en": "Supply Chain & Capacity", "zh": "供應鏈與產能"}, "people": {"en": "People", "zh": "人事異動"}, "regulatory": {"en": "Regulatory", "zh": "政策與法規"}, "investor_thesis": {"en": "Investor Thesis", "zh": "投資人觀點"}, "other": {"en": "Other", "zh": "其他"}}, "entity_types": {"hyperscaler": {"en": "Hyperscaler", "zh": "雲端巨頭"}, "ai_lab": {"en": "AI Lab", "zh": "AI 模型公司"}, "neocloud": {"en": "Neocloud / GPU Cloud", "zh": "新型算力業者"}, "public_company": {"en": "Public Company", "zh": "上市公司"}, "private_startup": {"en": "Private Startup", "zh": "私有新創"}, "utility": {"en": "Utility / IPP", "zh": "公用事業與發電商"}, "investor": {"en": "Investor", "zh": "投資人"}, "government": {"en": "Government / Regulator", "zh": "政府與監管機關"}}, "relation_types": {"buys_power_from": {"en": "buys power from", "zh": "向其購電"}, "supplies_to": {"en": "supplies to", "zh": "供貨給"}, "invests_in": {"en": "invests in", "zh": "投資"}, "acquires": {"en": "acquires", "zh": "收購"}, "partners_with": {"en": "partners with", "zh": "合作"}, "builds_for": {"en": "builds for", "zh": "為其建設"}, "regulates": {"en": "regulates", "zh": "監管"}}}, "signals": [], "week_signal_ids": [], "relations": [], "week_relation_ids": [], "funding": [], "week_funding_ids": [], "companies": [{"slug": "amazon", "name": "Amazon", "domain": "amazon.com", "entity_type": "hyperscaler", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": "AMZN", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "anthropic", "name": "Anthropic", "domain": "anthropic.com", "entity_type": "ai_lab", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "coreweave", "name": "CoreWeave", "domain": "coreweave.com", "entity_type": "neocloud", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": "CRWV", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "crusoe", "name": "Crusoe", "domain": "crusoe.ai", "entity_type": "neocloud", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "google", "name": "Google", "domain": "google.com", "entity_type": "hyperscaler", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": "GOOGL", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "meta", "name": "Meta", "domain": "meta.com", "entity_type": "hyperscaler", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": "META", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "microsoft", "name": "Microsoft", "domain": "microsoft.com", "entity_type": "hyperscaler", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": "MSFT", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "nvidia", "name": "NVIDIA", "domain": "nvidia.com", "entity_type": "public_company", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": "NVDA", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "nebius", "name": "Nebius", "domain": "nebius.com", "entity_type": "neocloud", "value_chain": "compute_demand", "hq_country": "NL", "region": "EU", "ticker": "NBIS", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "openai", "name": "OpenAI", "domain": "openai.com", "entity_type": "ai_lab", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "oracle", "name": "Oracle", "domain": "oracle.com", "entity_type": "hyperscaler", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": "ORCL", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "xai", "name": "xAI", "domain": "x.ai", "entity_type": "ai_lab", "value_chain": "compute_demand", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "digital-realty", "name": "Digital Realty", "domain": "digitalrealty.com", "entity_type": "public_company", "value_chain": "dc_development", "hq_country": "US", "region": "NA", "ticker": "DLR", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "equinix", "name": "Equinix", "domain": "equinix.com", "entity_type": "public_company", "value_chain": "dc_development", "hq_country": "US", "region": "NA", "ticker": "EQIX", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "eaton", "name": "Eaton", "domain": "eaton.com", "entity_type": "public_company", "value_chain": "dc_physical", "hq_country": "IE", "region": "EU", "ticker": "ETN", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "schneider-electric", "name": "Schneider Electric", "domain": "se.com", "entity_type": "public_company", "value_chain": "dc_physical", "hq_country": "FR", "region": "EU", "ticker": "SU", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "vertiv", "name": "Vertiv", "domain": "vertiv.com", "entity_type": "public_company", "value_chain": "dc_physical", "hq_country": "US", "region": "NA", "ticker": "VRT", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "bluwave-ai", "name": "BluWave-ai", "domain": "bluwave-ai.com", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "CA", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "capalo-ai", "name": "Capalo AI", "domain": "capalo.ai", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "FI", "region": "EU", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "eneryield", "name": "Eneryield", "domain": "eneryield.com", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "SE", "region": "EU", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "lunar-energy", "name": "Lunar Energy", "domain": "lunarenergy.com", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "nira-energy", "name": "Nira Energy", "domain": "niraenergy.com", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "ogre-ai", "name": "Ogre AI", "domain": "ogre.ai", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "RO", "region": "EU", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "paces", "name": "Paces", "domain": "paces.com", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "tibo-energy", "name": "Tibo Energy", "domain": "tibo.energy", "entity_type": "private_startup", "value_chain": "energy_software", "hq_country": "NL", "region": "EU", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "constellation-energy", "name": "Constellation Energy", "domain": "constellationenergy.com", "entity_type": "utility", "value_chain": "generation_nuclear", "hq_country": "US", "region": "NA", "ticker": "CEG", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "kairos-power", "name": "Kairos Power", "domain": "kairospower.com", "entity_type": "private_startup", "value_chain": "generation_nuclear", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "nuscale-power", "name": "NuScale Power", "domain": "nuscalepower.com", "entity_type": "public_company", "value_chain": "generation_nuclear", "hq_country": "US", "region": "NA", "ticker": "SMR", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "oklo", "name": "Oklo", "domain": "oklo.com", "entity_type": "public_company", "value_chain": "generation_nuclear", "hq_country": "US", "region": "NA", "ticker": "OKLO", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "talen-energy", "name": "Talen Energy", "domain": "talenenergy.com", "entity_type": "utility", "value_chain": "generation_nuclear", "hq_country": "US", "region": "NA", "ticker": "TLN", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "vistra", "name": "Vistra", "domain": "vistracorp.com", "entity_type": "utility", "value_chain": "generation_nuclear", "hq_country": "US", "region": "NA", "ticker": "VST", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "x-energy", "name": "X-energy", "domain": "x-energy.com", "entity_type": "private_startup", "value_chain": "generation_nuclear", "hq_country": "US", "region": "NA", "ticker": null, "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "bloom-energy", "name": "Bloom Energy", "domain": "bloomenergy.com", "entity_type": "public_company", "value_chain": "generation_other", "hq_country": "US", "region": "NA", "ticker": "BE", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "nextera-energy", "name": "NextEra Energy", "domain": "nexteraenergy.com", "entity_type": "utility", "value_chain": "generation_other", "hq_country": "US", "region": "NA", "ticker": "NEE", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "dominion-energy", "name": "Dominion Energy", "domain": "dominionenergy.com", "entity_type": "utility", "value_chain": "transmission_grid", "hq_country": "US", "region": "NA", "ticker": "D", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "ge-vernova", "name": "GE Vernova", "domain": "gevernova.com", "entity_type": "public_company", "value_chain": "transmission_grid", "hq_country": "US", "region": "NA", "ticker": "GEV", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}, {"slug": "siemens-energy", "name": "Siemens Energy", "domain": "siemens-energy.com", "entity_type": "public_company", "value_chain": "transmission_grid", "hq_country": "DE", "region": "EU", "ticker": "ENR", "status": "active", "signal_count": 0, "last_signal_at": null, "total_raised_usd": null, "relation_count": 0}], "investors": [], "candidates": [], "weekly_view": null, "stats": {"collected": 0, "extracted": 0, "failed": 0, "pending": 58, "no_body": 0, "relations_total": 0}}</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const I18N = {
+  en: {tagline: D.brand.tagline_en, nav_board: 'Board', nav_cand: 'Proposed', nav_report: 'Weekly report',
+       chart_weeks: 'Signals per week · last 12 weeks', chart_layers: 'Signals by layer · last 90 days',
+       view_h: "This week's view", board_h: 'On the board', this_week: 'this week', last_90: 'last 90 days',
+       search: 'search title / summary', all_layers: 'All layers', all_types: 'All types', all_entities: 'All entities',
+       th_date: 'Date', th_imp: 'Imp.', th_layer: 'Layer', th_type: 'Type', th_signal: 'Signal', th_figures: 'Figures', th_source: 'Source',
+       th_relation: 'Who → what → whom', th_value: 'Value', th_capacity: 'Capacity', th_term: 'Term', th_conf: 'Conf.',
+       th_company: 'Company', th_round: 'Round', th_amount: 'Amount', th_lead: 'Lead', th_also: 'Also in',
+       th_entity_type: 'Type', th_mentions: 'Mentions', th_first_seen: 'First seen',
+       circuits_zh: 'who buys power from whom, who supplies, who invests', sparks_zh: 'startup funding', panel_zh: 'tracked entities', panel_hint: 'click a card to filter the board',
+       cand_h: 'Proposed additions', no_match: 'No signals match.', no_rel: 'No relations recorded yet.', no_funding: 'No funding rounds recorded yet.', no_cand: 'No candidates proposed.',
+       t_signals: 'Signals this week', t_high: 'high importance', t_rel: 'New relations', t_rel_d: 'on record', t_mw: 'MW in play this week', t_usd: 'disclosed', t_entities: 'Entities on the panel', t_active: 'with activity', t_cand: 'Proposed additions', t_pending: 'pending',
+       footer: 'Free sources only: Google News RSS, DCD, Utility Dive, Data Center Frontier, CTVC, Canary Media, Latitude Media. Classification by Claude; the analyst reviews headlines weekly. Money and MW figures are model estimates — verify against the source link before quoting.'},
+  zh: {tagline: D.brand.tagline_zh, nav_board: '看板', nav_cand: '建議新增', nav_report: '週報',
+       chart_weeks: '每週訊號數 · 近 12 週', chart_layers: '各價值鏈層訊號 · 近 90 天',
+       view_h: '本週觀點', board_h: '本週上板', this_week: '本週', last_90: '近 90 天',
+       search: '搜尋標題 / 摘要', all_layers: '全部層級', all_types: '全部類型', all_entities: '全部對象',
+       th_date: '日期', th_imp: '重要度', th_layer: '層級', th_type: '類型', th_signal: '訊號', th_figures: '金額 / 容量', th_source: '來源',
+       th_relation: '誰 → 做了什麼 → 對誰', th_value: '金額', th_capacity: '容量', th_term: '年限', th_conf: '信心',
+       th_company: '公司', th_round: '輪次', th_amount: '金額', th_lead: '領投', th_also: '跟投',
+       th_entity_type: '類型', th_mentions: '提及', th_first_seen: '首次出現',
+       circuits_zh: '誰向誰買電、誰供貨、誰投資', sparks_zh: '新創募資', panel_zh: '追蹤對象', panel_hint: '點卡片篩選看板',
+       cand_h: '建議新增', no_match: '沒有符合的訊號。', no_rel: '尚無關係紀錄。', no_funding: '尚無募資紀錄。', no_cand: '沒有候選。',
+       t_signals: '本週訊號', t_high: '則高重要度', t_rel: '新關係', t_rel_d: '筆累計', t_mw: '本週涉及 MW', t_usd: '已揭露', t_entities: '追蹤對象', t_active: '個有動態', t_cand: '建議新增', t_pending: '待決定',
+       footer: '僅使用免費來源：Google News RSS、DCD、Utility Dive、Data Center Frontier、CTVC、Canary Media、Latitude Media。分類由 Claude 完成，分析師每週審閱頭條。金額與 MW 為模型估計，引用前請核對來源連結。'}
+};
+let LANG = 'en'; try { LANG = localStorage.getItem('cb-lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en'); } catch (e) {}
+const T = k => I18N[LANG][k] ?? k;
+const L = (kind, code) => (D.labels[kind]?.[code]?.[LANG]) || (D.labels[kind]?.[code]?.en) || (code || 'other');
+const LAYERS = Object.keys(D.labels.value_chain);
+const COLORS = ['var(--l0)','var(--l1)','var(--l2)','var(--l3)','var(--l4)','var(--l5)','var(--l6)','var(--l7)','var(--l8)','var(--l9)','var(--l10)'];
+const layerColor = k => COLORS[Math.max(0, LAYERS.indexOf(k)) % COLORS.length];
+const byCompany = Object.fromEntries(D.companies.map(c => [c.slug, c]));
+const weekIds = new Set(D.week_signal_ids);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtUsd = v => v == null ? '—' : v >= 1e9 ? '$' + (v/1e9).toFixed(1) + 'B' : v >= 1e6 ? '$' + (v/1e6).toFixed(v>=1e8?0:1) + 'M' : '$' + Math.round(v/1e3) + 'K';
+const fmtMw = v => v == null ? '—' : v >= 1000 ? (v/1000).toFixed(1) + ' GW' : Math.round(v) + ' MW';
+const imp = n => '<span class="imp" title="' + n + '/5">' + [1,2,3,4,5].map(i => '<i class="' + (i<=n?'on':'') + '"></i>').join('') + '</span>';
+const layerTag = k => k ? '<span class="tag"><span class="dot" style="background:' + layerColor(k) + '"></span>' + esc(L('value_chain', k)) + '</span>' : '';
+const summ = s => LANG === 'zh' ? (s.summary_zh || s.summary || '') : (s.summary || s.summary_zh || '');
+const figures = s => [s.deal_value_usd != null ? fmtUsd(s.deal_value_usd) : null, s.capacity_mw != null ? fmtMw(s.capacity_mw) : null].filter(Boolean).join(' · ') || '—';
+
+function applyI18n(){
+  document.documentElement.lang = LANG === 'zh' ? 'zh-Hant' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = T(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = T(el.dataset.i18nPh));
+  document.getElementById('lang-en').classList.toggle('on', LANG === 'en');
+  document.getElementById('lang-zh').classList.toggle('on', LANG === 'zh');
+  document.getElementById('meta').textContent = (LANG === 'zh' ? '第 ' : 'Week ') + D.week + ' · ' + D.generated_at.replace('T',' ').slice(0,16) + ' UTC';
+  renderAll();
+}
+document.getElementById('lang-en').onclick = () => { LANG = 'en'; try { localStorage.setItem('cb-lang','en'); } catch(e){} applyI18n(); };
+document.getElementById('lang-zh').onclick = () => { LANG = 'zh'; try { localStorage.setItem('cb-lang','zh'); } catch(e){} applyI18n(); };
+
+const fL = document.getElementById('f-layer'), fT = document.getElementById('f-type'), fE = document.getElementById('f-entity'), fI = document.getElementById('f-imp'), fQ = document.getElementById('f-q');
+let scopeWeek = true;
+
+function renderAll(){
+  // tiles
+  const weekSignals = D.signals.filter(s => weekIds.has(s.id));
+  const weekRel = D.relations.filter(r => new Set(D.week_relation_ids).has(r.id));
+  const mw = weekSignals.reduce((a,s) => a + (s.capacity_mw || 0), 0);
+  const usd = weekSignals.reduce((a,s) => a + (s.deal_value_usd || 0), 0);
+  const tiles = [
+    [T('t_signals'), weekSignals.length, weekSignals.filter(s => s.importance >= 4).length + ' ' + T('t_high')],
+    [T('t_rel'), weekRel.length, D.relations.length + ' ' + T('t_rel_d')],
+    [T('t_mw'), fmtMw(mw || null), fmtUsd(usd || null) + ' ' + T('t_usd')],
+    [T('t_entities'), D.companies.length, D.companies.filter(c => c.signal_count > 0).length + ' ' + T('t_active')],
+    [T('t_cand'), D.candidates.length, D.stats.pending + ' ' + T('t_pending')],
+  ];
+  document.getElementById('tiles').innerHTML = tiles.map(([k,v,d]) => '<div class="tile"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + '</div><div class="d">' + esc(d) + '</div></div>').join('');
+
+  // weekly bars
+  const isoWeek = dstr => { const d = new Date(dstr + 'T00:00:00Z'); const day = (d.getUTCDay()+6)%7; d.setUTCDate(d.getUTCDate()-day+3); const y = d.getUTCFullYear(); const jan4 = new Date(Date.UTC(y,0,4)); const w = 1 + Math.round(((d - jan4)/86400000 - 3 + ((jan4.getUTCDay()+6)%7))/7); return y + '-W' + String(w).padStart(2,'0'); };
+  const weeks = []; { const [y,w] = D.week.split('-W').map(Number); let d = new Date(Date.UTC(y,0,4)); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay()+6)%7) + (w-1)*7); for (let i=11;i>=0;i--){ const x = new Date(d); x.setUTCDate(d.getUTCDate()-i*7); weeks.push(isoWeek(x.toISOString().slice(0,10))); } }
+  const counts = Object.fromEntries(weeks.map(w => [w,0]));
+  D.signals.forEach(s => { if (s.date) { const w = isoWeek(s.date); if (w in counts) counts[w]++; } });
+  const max = Math.max(1, ...Object.values(counts));
+  document.getElementById('chart-weeks').innerHTML = weeks.map(w => '<div class="bar ' + (w===D.week?'cur':'') + '" style="height:' + Math.max(2, counts[w]/max*100) + '%" title="' + w + ': ' + counts[w] + '"><div class="val">' + (counts[w]||'') + '</div><div class="lbl">' + w.slice(5) + '</div></div>').join('');
+
+  // layer bars
+  const lc = Object.fromEntries(LAYERS.map(k => [k,0]));
+  D.signals.forEach(s => { if (s.value_chain in lc) lc[s.value_chain]++; });
+  const lmax = Math.max(1, ...Object.values(lc));
+  document.getElementById('chart-layers').innerHTML = LAYERS.filter(k => k !== 'other' || lc[k]).map(k => '<div><span class="dot" style="background:' + layerColor(k) + '"></span>' + esc(L('value_chain', k)) + '</div><div class="track"><div class="fill" style="width:' + (lc[k]/lmax*100) + '%;background:' + layerColor(k) + '"></div></div><div class="n">' + lc[k] + '</div>').join('') || '<div class="empty">—</div>';
+
+  // weekly view (only when the analyst marked it public)
+  const v = D.weekly_view && (LANG === 'zh' ? (D.weekly_view.zh || D.weekly_view.en) : (D.weekly_view.en || D.weekly_view.zh));
+  document.getElementById('view').hidden = !v;
+  document.getElementById('view-body').textContent = v || '';
+
+  // filters (rebuild options for the current language, keep selection)
+  const keep = [fL.value, fT.value, fE.value];
+  fL.innerHTML = '<option value="">' + T('all_layers') + '</option>' + LAYERS.map(k => '<option value="' + k + '">' + esc(L('value_chain', k)) + '</option>').join('');
+  fT.innerHTML = '<option value="">' + T('all_types') + '</option>' + Object.keys(D.labels.signal_types).map(k => '<option value="' + k + '">' + esc(L('signal_types', k)) + '</option>').join('');
+  fE.innerHTML = '<option value="">' + T('all_entities') + '</option>' + D.companies.map(c => '<option value="' + c.slug + '">' + esc(c.name) + '</option>').join('');
+  [fL.value, fT.value, fE.value] = keep;
+  renderSignals();
+
+  // circuits
+  document.getElementById('t-rel').innerHTML = D.relations.map(r => '<tr><td class="date">' + esc(r.first_seen) + (r.mentions > 1 ? '<div class="sum">×' + r.mentions + '</div>' : '') + '</td><td class="rel"><b>' + esc(r.subject_name) + '</b><span class="arrow">→</span>' + esc(L('relation_types', r.relation_type)) + '<span class="arrow">→</span><b>' + esc(r.object_name) + '</b>' + (r.subject_slug && byCompany[r.subject_slug] ? '<div class="sum">' + layerTag(byCompany[r.subject_slug].value_chain) + (r.object_slug && byCompany[r.object_slug] ? layerTag(byCompany[r.object_slug].value_chain) : '') + '</div>' : '') + '</td><td class="num">' + fmtUsd(r.value_usd) + '</td><td class="num">' + fmtMw(r.capacity_mw) + '</td><td class="num">' + (r.term_years ? r.term_years + ' y' : '—') + '</td><td class="num">' + (r.confidence != null ? Math.round(r.confidence*100) + '%' : '—') + '</td><td>' + (r.source_url ? '<a href="' + esc(r.source_url) + '" target="_blank" rel="noopener">' + esc(r.source || 'link') + '</a>' : '—') + '</td></tr>').join('');
+  document.getElementById('e-rel').hidden = D.relations.length > 0;
+
+  // sparks
+  document.getElementById('t-funding').innerHTML = D.funding.map(f => '<tr><td class="date">' + esc(f.date) + '</td><td>' + esc(f.company_name) + '</td><td>' + layerTag(f.value_chain) + '</td><td><span class="tag type">' + esc((f.round_type||'').replace(/_/g,' ')) + '</span></td><td class="num">' + esc(f.amount_raw||'—') + '</td><td class="num">' + fmtUsd(f.amount_usd) + '</td><td>' + esc((f.leads||[]).join(', ')||'—') + '</td><td>' + esc((f.participants||[]).join(', ')||'—') + '</td><td><span class="tag">' + esc(f.confidence||'—') + '</span></td><td>' + (f.source_url ? '<a href="' + esc(f.source_url) + '" target="_blank" rel="noopener">↗</a>' : '') + '</td></tr>').join('');
+  document.getElementById('e-funding').hidden = D.funding.length > 0;
+
+  // the panel, grouped by layer
+  document.getElementById('cards').innerHTML = LAYERS.filter(k => D.companies.some(c => c.value_chain === k)).map(k => '<div class="layerhead"><span class="dot" style="background:' + layerColor(k) + '"></span>' + esc(L('value_chain', k)) + '</div><div class="cards">' + D.companies.filter(c => c.value_chain === k).map(c => '<div class="card" data-slug="' + c.slug + '" style="border-left-color:' + layerColor(k) + '"><div class="n">' + esc(c.name) + (c.ticker ? ' <span class="tag">' + esc(c.ticker) + '</span>' : '') + '</div><div class="m">' + esc(L('entity_types', c.entity_type)) + (c.hq_country ? ' · ' + esc(c.hq_country) : '') + '</div><div class="s"><span>signals <b>' + (c.signal_count||0) + '</b></span><span>circuits <b>' + (c.relation_count||0) + '</b></span></div><div class="s"><span style="color:var(--muted)">' + esc((c.last_signal_at||'—').slice(0,10)) + '</span>' + (c.total_raised_usd ? '<span>raised <b>' + fmtUsd(c.total_raised_usd) + '</b></span>' : '') + '</div></div>').join('') + '</div>').join('');
+  document.querySelectorAll('.card').forEach(el => el.onclick = () => { const on = el.classList.contains('active'); document.querySelectorAll('.card').forEach(x => x.classList.remove('active')); if (!on) { el.classList.add('active'); fE.value = el.dataset.slug; scopeWeek = false; } else { fE.value = ''; } toggle(); document.getElementById('board').scrollIntoView({behavior:'smooth'}); });
+
+  // candidates (public fields only)
+  document.getElementById('t-cand').innerHTML = D.candidates.map(c => '<tr><td><b>' + esc(c.name) + '</b>' + (c.domain ? '<div class="sum">' + esc(c.domain) + '</div>' : '') + '</td><td>' + esc(L('entity_types', c.entity_type)) + '</td><td>' + layerTag(c.value_chain) + '</td><td class="num">' + (c.mentions||1) + '</td><td>' + (c.first_url ? '<a href="' + esc(c.first_url) + '" target="_blank" rel="noopener">' + esc((c.first_title||'link').slice(0,70)) + '</a>' : '—') + '</td></tr>').join('');
+  document.getElementById('e-cand').hidden = D.candidates.length > 0;
+
+  document.getElementById('foot').innerHTML = '<div class="slogan">' + esc(D.brand.footer_en) + ' · ' + esc(D.brand.footer_zh) + '</div>' + esc(T('footer'));
+}
+
+function renderSignals(){
+  const q = fQ.value.trim().toLowerCase();
+  const rows = D.signals.filter(s => (!scopeWeek || weekIds.has(s.id)) && (!fL.value || s.value_chain === fL.value) && (!fT.value || s.signal_type === fT.value) && (!fE.value || (s.company_slugs||[]).includes(fE.value)) && s.importance >= +fI.value && (!q || (s.title + ' ' + (s.summary||'') + ' ' + (s.summary_zh||'')).toLowerCase().includes(q)))
+    .sort((a,b) => b.importance - a.importance || (b.date||'').localeCompare(a.date||''));
+  document.getElementById('t-signals').innerHTML = rows.map(s => '<tr><td class="date">' + esc(s.date||'—') + '</td><td>' + imp(s.importance) + '</td><td>' + layerTag(s.value_chain) + '</td><td><span class="tag type">' + esc(L('signal_types', s.signal_type)) + '</span></td><td><div>' + esc(s.title) + '</div><div class="sum">' + esc(summ(s)) + ((s.company_slugs||[]).length ? ' <span style="color:var(--muted)">· ' + s.company_slugs.map(c => esc(byCompany[c]?.name || c)).join(', ') + '</span>' : '') + '</div></td><td class="num">' + esc(figures(s)) + '</td><td><a href="' + esc(s.link) + '" target="_blank" rel="noopener">' + esc(s.source||'link') + '</a></td></tr>').join('');
+  document.getElementById('e-signals').hidden = rows.length > 0;
+}
+[fL,fT,fE,fI].forEach(el => el.addEventListener('change', renderSignals)); fQ.addEventListener('input', renderSignals);
+function toggle(){ document.getElementById('tgl-week').classList.toggle('on', scopeWeek); document.getElementById('tgl-all').classList.toggle('on', !scopeWeek); renderSignals(); }
+document.getElementById('tgl-week').onclick = () => { scopeWeek = true; toggle(); };
+document.getElementById('tgl-all').onclick = () => { scopeWeek = false; toggle(); };
+applyI18n();
+</script>
+</body>
+</html>

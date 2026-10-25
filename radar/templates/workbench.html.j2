@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workbench · {{ week }} · {{ brand.name }}</title>
+<style>
+:root{color-scheme:dark;--bg:#0f1110;--surface:#171a18;--surface-2:#1f2321;--line:#2a2f2c;--line-strong:#3a403c;--text:#f1f2ec;--text-2:#c2c5ba;--muted:#848a80;--accent:#f2b705;--private:#e2693b;--ok:#2fb67f;
+--mono:"SF Mono",Menlo,Consolas,monospace;--sans:-apple-system,"Inter","Noto Sans TC","PingFang TC","Segoe UI",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 var(--sans)}
+a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--line-strong)}a:hover{color:var(--text)}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 80px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+h1{font:700 20px/1.2 var(--sans);margin:0}h1 .mark{display:inline-block;width:10px;height:18px;background:var(--private);border-radius:2px;vertical-align:-3px;margin-right:8px}
+.badge{font:11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#111;background:var(--private);padding:2px 8px;border-radius:3px}
+.meta{font:12px var(--mono);color:var(--muted)}
+h2{font:600 13px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--text-2);margin:30px 0 10px;display:flex;align-items:center;gap:10px}
+h2 .zh{font-family:var(--sans);text-transform:none;letter-spacing:0;color:var(--muted);font-weight:500}h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.item{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line-strong);border-radius:6px;padding:14px 16px;margin-bottom:10px}
+.item.todo{border-left-color:var(--accent)}.item.done{border-left-color:var(--ok)}
+.item .t{font-weight:600;font-size:15px}.item .t a{border:0}
+.row{display:flex;flex-wrap:wrap;gap:6px 14px;font:12px var(--mono);color:var(--muted);margin-top:4px}
+.row b{color:var(--text-2)}
+.sum{color:var(--text-2);margin-top:8px}.sum.zh{color:var(--text)}
+.note{margin-top:10px;padding:10px 12px;background:var(--surface-2);border-radius:4px;border-left:2px solid var(--private);font-size:13px}
+.note .k{font:11px var(--mono);color:var(--private);text-transform:uppercase;letter-spacing:.08em}
+.cmd{margin-top:10px;display:flex;gap:8px;align-items:flex-start}
+code{font:12px var(--mono);background:#0b0d0c;color:#d9dccf;padding:8px 10px;border-radius:4px;display:block;white-space:pre-wrap;flex:1;border:1px solid var(--line)}
+button{font:11px var(--mono);color:var(--text-2);background:none;border:1px solid var(--line-strong);border-radius:4px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+button:hover{color:var(--text);border-color:var(--text-2)}
+table{width:100%;border-collapse:collapse;font-size:13px}th{font:11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line-strong)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}td.num{text-align:right;font-family:var(--mono);font-size:12px;white-space:nowrap}
+.empty{color:var(--muted);font:12px var(--mono);padding:14px 0}
+.view{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;color:var(--text-2)}
+.five{font-size:12px;color:var(--muted);margin-top:6px}
+footer{margin-top:40px;font:12px var(--mono);color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+  <h1><span class="mark"></span>Workbench · 工作台</h1>
+  <span class="badge">private · 僅你可見 · 不會發佈</span>
+  <span class="meta">{{ brand.name }} · {{ week }} · {{ generated_at[:16].replace('T',' ') }} UTC</span>
+</header>
+
+<h2>1. Review queue <span class="zh">待審清單 · {{ review_queue|length }} 則，{{ review_queue|rejectattr('reviewed')|list|length }} 則未審</span></h2>
+{% if not review_queue %}<div class="empty">本週沒有需要你判斷的訊號。</div>{% endif %}
+{% for s in review_queue %}
+<div class="item {{ 'done' if s.reviewed else 'todo' }}">
+  <div class="t">{{ '✅' if s.reviewed else '⬜' }} #{{ s.id }} · <a href="{{ s.link }}" target="_blank" rel="noopener">{{ s.title }}</a></div>
+  <div class="row"><span>機器 <b>{{ s.importance_machine }}/5</b></span>{% if s.importance_override %}<span>你 <b>{{ s.importance_override }}/5</b></span>{% endif %}<span>{{ vc(s.value_chain, 'zh') }} · {{ vc(s.value_chain) }}</span><span>{{ sig(s.signal_type, 'zh') }}</span>{% if s.deal_value_usd %}<span><b>{{ usd(s.deal_value_usd) }}</b></span>{% endif %}{% if s.capacity_mw %}<span><b>{{ mw(s.capacity_mw) }}</b></span>{% endif %}<span>{{ s.source }} · {{ s.date }}</span><span>進清單原因：{{ s.reasons|join('、') }}</span></div>
+  <div class="sum zh">{{ s.summary_zh or '' }}</div>
+  <div class="sum">{{ s.summary or '' }}</div>
+  {% if s.company_names %}<div class="row"><span>對象：<b>{{ s.company_names|join(', ') }}</b></span></div>{% endif %}
+  {% if s.note_zh or s.note_en %}<div class="note"><div class="k">你的註記</div>{{ s.note_zh or '' }}{% if s.note_zh and s.note_en %}<br>{% endif %}{{ s.note_en or '' }}</div>{% endif %}
+  {% if s.deal_logic %}<div class="note"><div class="k">交易邏輯五問</div>{{ s.deal_logic }}</div>{% endif %}
+  <div class="cmd"><code>radar note {{ s.id }} --importance {{ s.importance_override or s.importance_machine }} --zh "" --reason ""</code><button onclick="copy(this)">複製</button></div>
+  {% if not s.deal_logic %}<div class="five">五問：1 誰付錢給誰、為什麼是現在 · 2 誰得利誰受損 · 3 解決哪個瓶頸 · 4 反方怎麼說 · 5 我預測什麼、何時驗證 → <span style="font-family:var(--mono)">radar note {{ s.id }} --logic "…"</span></div>{% endif %}
+</div>
+{% endfor %}
+
+<h2>2. Candidates <span class="zh">候選對象 · 收或不收</span></h2>
+{% if candidates %}
+<table><thead><tr><th class="num">分數</th><th>名稱</th><th>類型 / 層級</th><th>為什麼</th><th class="num">提及</th><th>規則</th><th>動作</th></tr></thead><tbody>
+{% for c in candidates %}
+<tr><td class="num">{{ '%.1f'|format(c.score) }}</td><td><b>{{ c.name }}</b>{% if c.domain %}<div class="meta">{{ c.domain }}</div>{% endif %}</td><td>{{ et(c.entity_type, 'zh') }}<br>{{ vc(c.value_chain, 'zh') }}</td><td>{{ c.why_relevant or '' }}{% if c.first_url %} <a href="{{ c.first_url }}" target="_blank" rel="noopener">來源</a>{% endif %}</td><td class="num">{{ c.mentions }}</td><td>{{ c.source }}</td>
+<td><div class="cmd"><code>radar accept "{{ c.name }}" --reason ""</code><button onclick="copy(this)">複製</button></div><div class="cmd"><code>radar reject "{{ c.name }}" --reason ""</code><button onclick="copy(this)">複製</button></div></td></tr>
+{% endfor %}
+</tbody></table>
+{% else %}<div class="empty">沒有候選。</div>{% endif %}
+
+<h2>3. This week's view <span class="zh">本週觀點 · {{ '已標記公開' if weekly_view and weekly_view.public else '私人草稿' if weekly_view else '尚未撰寫' }}</span></h2>
+{% if weekly_view and (weekly_view.draft_zh or weekly_view.draft_en) %}
+<div class="view">{{ weekly_view.draft_zh or '' }}{% if weekly_view.draft_zh and weekly_view.draft_en %}
+
+{% endif %}{{ weekly_view.draft_en or '' }}</div>
+{% else %}<div class="empty">對 Claude 說「起草本週觀點」，或 <span style="font-family:var(--mono)">radar view --zh view.zh.md --en view.en.md [--public]</span></div>{% endif %}
+
+<h2>4. Everything else this week <span class="zh">其餘訊號 · {{ others|length }} 則</span></h2>
+{% if others %}
+<table><thead><tr><th>日期</th><th class="num">重要度</th><th>層級</th><th>訊號</th><th>來源</th></tr></thead><tbody>
+{% for s in others %}
+<tr><td class="num">{{ s.date }}</td><td class="num">{{ s.importance_final }}</td><td>{{ vc(s.value_chain, 'zh') }}</td><td>{{ s.title }}<div class="meta">{{ s.summary_zh or s.summary or '' }}</div></td><td><a href="{{ s.link }}" target="_blank" rel="noopener">{{ s.source or 'link' }}</a></td></tr>
+{% endfor %}
+</tbody></table>
+{% else %}<div class="empty">—</div>{% endif %}
+
+<h2>5. Decision log <span class="zh">分歧日誌 · 近 35 天</span></h2>
+{% if log %}
+<table><thead><tr><th>日期</th><th>類型</th><th>對象</th><th>機器</th><th>你</th><th>理由</th></tr></thead><tbody>
+{% for r in log %}<tr><td class="num">{{ r.decided_at[:10] }}</td><td>{{ r.kind }}</td><td>{{ r.target }}</td><td class="num">{{ r.machine_value or '—' }}</td><td class="num">{{ r.human_value or '—' }}</td><td>{{ r.reason or '' }}</td></tr>{% endfor %}
+</tbody></table>
+{% else %}<div class="empty">還沒有任何分歧紀錄。每次你改機器的評分或決定候選，這裡就會多一條。</div>{% endif %}
+
+<footer>{{ brand.footer_zh }} · 這一頁是本機檔案（reports/workbench.html），已列入 .gitignore，不會進倉庫、不會發佈。</footer>
+</div>
+<script>
+function copy(btn){ const t = btn.parentElement.querySelector('code').textContent; navigator.clipboard?.writeText(t).then(() => { btn.textContent = '已複製'; setTimeout(() => btn.textContent = '複製', 1200); }); }
+</script>
+</body></html>

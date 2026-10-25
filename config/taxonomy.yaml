@@ -1,0 +1,124 @@
+# 受控詞彙（controlled vocabulary）。所有分類欄位只能用這裡的代碼，否則之後無法聚合。
+# 每個代碼都有 label_zh / label_en，週報與儀表板直接取用，不要在程式裡另外寫中文。
+# 評分尺（importance_scale）會原文放進 Claude 的提示詞；依分歧日誌修訂這裡，機器就跟著改。
+
+# ---- 價值鏈位置：一則訊號、一家公司「主要落在哪一層」 ----
+value_chain:
+  compute_demand:
+    label_zh: 算力需求端
+    label_en: AI Compute Demand
+    scope: 超大規模業者、AI 實驗室、新型雲端業者的算力與電力需求、園區宣告、自建電源
+  generation_nuclear:
+    label_zh: 核能發電
+    label_en: Nuclear Generation
+    scope: 核電重啟、延役、SMR、新建核電、核燃料供應
+  generation_other:
+    label_zh: 其他發電
+    label_en: Gas, Fuel Cell & Onsite Power
+    scope: 燃氣機組、燃料電池、現場發電、地熱、再生能源專案（當它是為資料中心而建）
+  transmission_grid:
+    label_zh: 輸配電與電網設備
+    label_en: Transmission & Grid Equipment
+    scope: 變壓器、開關設備、HVDC、輸電線、併網排隊、電網擴建
+  storage:
+    label_zh: 儲能
+    label_en: Energy Storage
+    scope: 電池儲能、長時儲能、儲能專案融資
+  dc_physical:
+    label_zh: 資料中心實體層
+    label_en: Data Center Power & Cooling
+    scope: 配電、UPS、冷卻、液冷、模組化機房、機電設備供應鏈
+  dc_development:
+    label_zh: 資料中心開發
+    label_en: Data Center Development & REIT
+    scope: 園區開發、不動產、土地與電力取得、資料中心 REIT、園區融資
+  offtake_markets:
+    label_zh: 購電與市場
+    label_en: PPAs, Offtake & Markets
+    scope: 購電合約、容量市場、電價與費率案、電力交易
+  energy_software:
+    label_zh: 能源軟體
+    label_en: Energy Software
+    scope: VPP、預測、調度最佳化、電網分析、能源管理系統（v2 的全部類別併入此層）
+  policy_regulation:
+    label_zh: 政策與監管
+    label_en: Policy & Regulation
+    scope: FERC、州與國家能源政策、許可改革、出口管制、資料中心電費分攤規則
+  other:
+    label_zh: 其他
+    label_en: Other
+    scope: 相關但無法歸入上述任何一層
+
+# ---- 訊號類型：這則新聞「在講哪一種事」 ----
+signal_types:
+  funding:          { label_zh: 募資,          label_en: Funding }
+  m_and_a:          { label_zh: 併購,          label_en: M&A }
+  offtake:          { label_zh: 購電與長約,    label_en: PPA / Offtake }
+  capex:            { label_zh: 資本支出與建廠, label_en: Capex & Buildout }
+  earnings:         { label_zh: 財報與財測,    label_en: Earnings & Guidance }
+  partnership:      { label_zh: 合作與客戶,    label_en: Partnership }
+  product:          { label_zh: 產品與技術,    label_en: Product & Technology }
+  supply_chain:     { label_zh: 供應鏈與產能,  label_en: Supply Chain & Capacity }
+  people:           { label_zh: 人事異動,      label_en: People }
+  regulatory:       { label_zh: 政策與法規,    label_en: Regulatory }
+  investor_thesis:  { label_zh: 投資人觀點,    label_en: Investor Thesis }
+  other:            { label_zh: 其他,          label_en: Other }
+
+# ---- 對象類型：追蹤名單上的每個對象「是誰」 ----
+entity_types:
+  hyperscaler:      { label_zh: 雲端巨頭,        label_en: Hyperscaler }
+  ai_lab:           { label_zh: AI 模型公司,     label_en: AI Lab }
+  neocloud:         { label_zh: 新型算力業者,    label_en: Neocloud / GPU Cloud }
+  public_company:   { label_zh: 上市公司,        label_en: Public Company }
+  private_startup:  { label_zh: 私有新創,        label_en: Private Startup }
+  utility:          { label_zh: 公用事業與發電商, label_en: Utility / IPP }
+  investor:         { label_zh: 投資人,          label_en: Investor }
+  government:       { label_zh: 政府與監管機關,  label_en: Government / Regulator }
+
+# ---- 關係類型：誰對誰做了什麼（subject → object） ----
+relation_types:
+  buys_power_from:  { label_zh: 向其購電,  label_en: buys power from }
+  supplies_to:      { label_zh: 供貨給,    label_en: supplies to }
+  invests_in:       { label_zh: 投資,      label_en: invests in }
+  acquires:         { label_zh: 收購,      label_en: acquires }
+  partners_with:    { label_zh: 合作,      label_en: partners with }
+  builds_for:       { label_zh: 為其建設,  label_en: builds for }
+  regulates:        { label_zh: 監管,      label_en: regulates }
+
+# ---- 募資輪次（Sparks 子品牌用） ----
+round_types:
+  - pre_seed
+  - seed
+  - series_a
+  - series_b
+  - series_c_plus
+  - growth
+  - grant
+  - debt
+  - undisclosed
+
+fund_types:
+  - climate_vc
+  - generalist_vc
+  - corporate_vc_utility
+  - infrastructure_fund
+  - sovereign_or_pension
+  - unknown
+
+# ---- 重要度評分尺 1–5。這段會逐字進入提示詞。改這裡等於重新訓練機器。 ----
+importance_scale:
+  5:
+    zh: 改變價值鏈某一層供需結構的事件：GW 級購電或園區、核電重啟或新建核電定案、州級或國家級政策首例、十億美元級併購或融資
+    en: Changes the supply/demand structure of a layer — GW-scale offtake or campus, a nuclear restart or new-build decision, a first-of-its-kind state/national policy, a $1B+ acquisition or raise
+  4:
+    zh: 主要玩家的具體承諾：有數字的資本支出、新廠或新園區、百 MW 級長約、億美元級交易
+    en: A concrete commitment by a major player — capex with a number, a new plant or campus, a 100 MW-class contract, a $100M-class deal
+  3:
+    zh: 有名字有金額的一般交易、產品發表、有實質內容的合作
+    en: A named deal with an amount, a product launch, or a partnership with substance
+  2:
+    zh: 評論、分析、重述既有消息、無金額的意向宣告
+    en: Commentary, analysis, re-reporting, or an intention without numbers
+  1:
+    zh: 邊緣相關或無法驗證
+    en: Marginally relevant or unverifiable

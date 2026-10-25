@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.egg-info/
+build/
+.DS_Store
+reports/workbench.html
+
+# private data — never in the public repo (two-repo split is SPEC v3 stage 3)
+data/
+reports/*.md
+!reports/*.public.md
+!reports/.gitkeep
+# the real panel carries private analyst notes; config/examples/ holds the public sample
+config/watchlist.yaml
+config/watchlist.accepted.yaml
+
+# local editor / Claude Code settings (contain machine paths)
+.claude/
+.vscode/
