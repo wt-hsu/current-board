@@ -23,3 +23,5 @@ config/watchlist.accepted.yaml
 
 # design docs are kept in the private project space until an English DESIGN.md exists
 docs/SPEC-v3.md
+# personal Claude Code notes
+CLAUDE.local.md

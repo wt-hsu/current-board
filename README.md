@@ -106,9 +106,11 @@ radar/
 data/radar.db    SQLite (local only); opens older databases and migrates them in place
 ```
 
-## Costs and limits
+## Sources & caveats
 
-Free sources only. Roughly 100–250 new items a week at the current panel size; at ~3k input tokens each, extraction
-with `claude-sonnet-5-5` is a few dollars a month. `RADAR_MODEL` changes the model. Money and MW figures carry a
-`value_source` (disclosed / reported / estimated): verify against the source link before quoting. Google News URL
-decoding depends on an undocumented endpoint; when it breaks, extraction falls back to title + RSS summary.
+Free, public sources only: Google News RSS, Data Center Dynamics, Utility Dive, Data Center Frontier, CTVC, Canary
+Media, Latitude Media, plus company releases and filings where linked. Every line on the board links back to its
+source. Money and MW figures carry a `value_source` (disclosed / reported / estimated) and a `capacity_kind`
+(nameplate vs IT load): verify against the source link before quoting, and never add the two kinds of MW together.
+Google News URL decoding depends on an undocumented endpoint; when it breaks, extraction falls back to title + RSS
+summary.
