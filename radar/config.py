@@ -160,5 +160,5 @@ def append_accepted_company(company: dict[str, Any]) -> None:
     data.setdefault("companies", [])
     data["companies"].append(company)
     with path.open("w", encoding="utf-8") as fh:
-        fh.write("# 由 `radar accept <候選名稱>` 自動維護。不要手動編輯；要改請搬到 watchlist.yaml。\n")
+        fh.write("# Maintained by `radar accept <candidate>`. Do not edit by hand; move entries to watchlist.yaml instead.\n")
         yaml.safe_dump(data, fh, allow_unicode=True, sort_keys=False)

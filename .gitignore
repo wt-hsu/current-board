@@ -20,3 +20,6 @@ config/watchlist.accepted.yaml
 # local editor / Claude Code settings (contain machine paths)
 .claude/
 .vscode/
+
+# design docs are kept in the private project space until an English DESIGN.md exists
+docs/SPEC-v3.md

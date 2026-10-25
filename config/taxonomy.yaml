@@ -1,55 +1,55 @@
-# 受控詞彙（controlled vocabulary）。所有分類欄位只能用這裡的代碼，否則之後無法聚合。
-# 每個代碼都有 label_zh / label_en，週報與儀表板直接取用，不要在程式裡另外寫中文。
-# 評分尺（importance_scale）會原文放進 Claude 的提示詞；依分歧日誌修訂這裡，機器就跟著改。
+# Controlled vocabulary. Every classification field must use a code from this file, or nothing aggregates later.
+# Each code carries label_en (public board) and label_zh (the analyst's private bilingual workbench).
+# importance_scale goes verbatim into Claude's prompt: revise it after reading the decision log and the machine follows.
 
-# ---- 價值鏈位置：一則訊號、一家公司「主要落在哪一層」 ----
+# ---- Value-chain layer: where a signal or a company mainly sits ----
 value_chain:
   compute_demand:
     label_zh: 算力需求端
     label_en: AI Compute Demand
-    scope: 超大規模業者、AI 實驗室、新型雲端業者的算力與電力需求、園區宣告、自建電源
+    scope: compute and power demand from hyperscalers, AI labs and neoclouds; campus announcements; self-built power
   generation_nuclear:
     label_zh: 核能發電
     label_en: Nuclear Generation
-    scope: 核電重啟、延役、SMR、新建核電、核燃料供應
+    scope: nuclear restarts, life extensions, SMRs, new-build nuclear, nuclear fuel supply
   generation_other:
     label_zh: 其他發電
     label_en: Gas, Fuel Cell & Onsite Power
-    scope: 燃氣機組、燃料電池、現場發電、地熱、再生能源專案（當它是為資料中心而建）
+    scope: gas turbines, fuel cells, onsite generation, geothermal, renewable projects when built for data centers
   transmission_grid:
     label_zh: 輸配電與電網設備
     label_en: Transmission & Grid Equipment
-    scope: 變壓器、開關設備、HVDC、輸電線、併網排隊、電網擴建
+    scope: transformers, switchgear, HVDC, transmission lines, interconnection queues, grid expansion
   storage:
     label_zh: 儲能
     label_en: Energy Storage
-    scope: 電池儲能、長時儲能、儲能專案融資
+    scope: battery storage, long-duration storage, storage project finance
   dc_physical:
     label_zh: 資料中心實體層
     label_en: Data Center Power & Cooling
-    scope: 配電、UPS、冷卻、液冷、模組化機房、機電設備供應鏈
+    scope: power distribution, UPS, cooling, liquid cooling, modular halls, electrical and mechanical supply chain
   dc_development:
     label_zh: 資料中心開發
     label_en: Data Center Development & REIT
-    scope: 園區開發、不動產、土地與電力取得、資料中心 REIT、園區融資
+    scope: campus development, real estate, land and power procurement, data-center REITs, campus financing
   offtake_markets:
     label_zh: 購電與市場
     label_en: PPAs, Offtake & Markets
-    scope: 購電合約、容量市場、電價與費率案、電力交易
+    scope: PPAs, capacity markets, tariffs and rate cases, power trading
   energy_software:
     label_zh: 能源軟體
     label_en: Energy Software
-    scope: VPP、預測、調度最佳化、電網分析、能源管理系統（v2 的全部類別併入此層）
+    scope: VPPs, forecasting, dispatch optimisation, grid analytics, energy management systems
   policy_regulation:
     label_zh: 政策與監管
     label_en: Policy & Regulation
-    scope: FERC、州與國家能源政策、許可改革、出口管制、資料中心電費分攤規則
+    scope: FERC, state and national energy policy, permitting reform, export controls, data-center cost-allocation rules
   other:
     label_zh: 其他
     label_en: Other
-    scope: 相關但無法歸入上述任何一層
+    scope: relevant but fits none of the layers above
 
-# ---- 訊號類型：這則新聞「在講哪一種事」 ----
+# ---- Signal type: what kind of event the article is about ----
 signal_types:
   funding:          { label_zh: 募資,          label_en: Funding }
   m_and_a:          { label_zh: 併購,          label_en: M&A }
@@ -64,7 +64,7 @@ signal_types:
   investor_thesis:  { label_zh: 投資人觀點,    label_en: Investor Thesis }
   other:            { label_zh: 其他,          label_en: Other }
 
-# ---- 對象類型：追蹤名單上的每個對象「是誰」 ----
+# ---- Entity type: who each tracked entity is ----
 entity_types:
   hyperscaler:      { label_zh: 雲端巨頭,        label_en: Hyperscaler }
   ai_lab:           { label_zh: AI 模型公司,     label_en: AI Lab }
@@ -75,7 +75,7 @@ entity_types:
   investor:         { label_zh: 投資人,          label_en: Investor }
   government:       { label_zh: 政府與監管機關,  label_en: Government / Regulator }
 
-# ---- 關係類型：誰對誰做了什麼（subject → object） ----
+# ---- Relation type: who did what to whom (subject → object) ----
 relation_types:
   buys_power_from:  { label_zh: 向其購電,  label_en: buys power from }
   supplies_to:      { label_zh: 供貨給,    label_en: supplies to }
@@ -85,7 +85,7 @@ relation_types:
   builds_for:       { label_zh: 為其建設,  label_en: builds for }
   regulates:        { label_zh: 監管,      label_en: regulates }
 
-# ---- 募資輪次（Sparks 子品牌用） ----
+# ---- Funding rounds (Sparks sub-brand) ----
 round_types:
   - pre_seed
   - seed
@@ -105,7 +105,7 @@ fund_types:
   - sovereign_or_pension
   - unknown
 
-# ---- 重要度評分尺 1–5。這段會逐字進入提示詞。改這裡等於重新訓練機器。 ----
+# ---- Importance scale 1–5. Goes verbatim into the prompt: editing this retrains the machine. ----
 importance_scale:
   5:
     zh: 改變價值鏈某一層供需結構的事件：GW 級購電或園區、核電重啟或新建核電定案、州級或國家級政策首例、十億美元級併購或融資

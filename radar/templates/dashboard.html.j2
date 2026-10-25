@@ -94,13 +94,12 @@ code{font:12px var(--mono);background:var(--surface-2);padding:1px 5px;border-ra
 <body>
 <div class="wrap">
 <header>
-  <h1><span class="mark"></span>{{ brand.name }}<span class="zh">{{ brand.name_zh }}</span></h1>
+  <h1><span class="mark"></span>{{ brand.name }}</h1>
   <div class="tag" data-i18n="tagline"></div>
   <div class="tag" style="opacity:.75;font-size:.85em">Beta · machine-scored · data backfilled from 15 Aug 2026 · analyst review begins W44 · interface redesign in progress</div>
   <div class="meta" id="meta"></div>
   <nav>
     <a href="#board" data-i18n="nav_board"></a><a href="#circuits">Circuits</a><a href="#sparks">Sparks</a><a href="#panel">The Panel</a><a href="#candidates" data-i18n="nav_cand"></a><a href="latest-report.md" data-i18n="nav_report"></a>
-    <span class="lang"><button id="lang-en">EN</button><button id="lang-zh">中文</button></span>
   </nav>
 </header>
 
@@ -178,21 +177,9 @@ const I18N = {
        circuits_zh: 'who buys power from whom, who supplies, who invests', sparks_zh: 'startup funding', panel_zh: 'tracked entities', panel_hint: 'click a card to filter the board',
        cand_h: 'Proposed additions', no_match: 'No signals match.', no_rel: 'No relations recorded yet.', no_funding: 'No funding rounds recorded yet.', no_cand: 'No candidates proposed.',
        t_signals: 'Signals this week', t_high: 'high importance', t_rel: 'New relations', t_rel_d: 'on record', t_mw: 'MW in play this week', t_usd: 'disclosed', t_entities: 'Entities on the panel', t_active: 'with activity', t_cand: 'Proposed additions', t_pending: 'pending',
-       footer: 'Free sources only: Google News RSS, DCD, Utility Dive, Data Center Frontier, CTVC, Canary Media, Latitude Media. Classification by Claude; the analyst reviews headlines weekly. Money and MW figures are model estimates — verify against the source link before quoting.'},
-  zh: {tagline: D.brand.tagline_zh, nav_board: '看板', nav_cand: '建議新增', nav_report: '週報',
-       chart_weeks: '每週訊號數 · 近 12 週', chart_layers: '各價值鏈層訊號 · 近 90 天',
-       view_h: '本週觀點', board_h: '本週上板', this_week: '本週', last_90: '近 90 天',
-       search: '搜尋標題 / 摘要', all_layers: '全部層級', all_types: '全部類型', all_entities: '全部對象',
-       th_date: '日期', th_imp: '重要度', th_layer: '層級', th_type: '類型', th_signal: '訊號', th_figures: '金額 / 容量', th_source: '來源',
-       th_relation: '誰 → 做了什麼 → 對誰', th_value: '金額', th_capacity: '容量', th_term: '年限', th_conf: '信心',
-       th_company: '公司', th_round: '輪次', th_amount: '金額', th_lead: '領投', th_also: '跟投',
-       th_entity_type: '類型', th_mentions: '提及', th_first_seen: '首次出現',
-       circuits_zh: '誰向誰買電、誰供貨、誰投資', sparks_zh: '新創募資', panel_zh: '追蹤對象', panel_hint: '點卡片篩選看板',
-       cand_h: '建議新增', no_match: '沒有符合的訊號。', no_rel: '尚無關係紀錄。', no_funding: '尚無募資紀錄。', no_cand: '沒有候選。',
-       t_signals: '本週訊號', t_high: '則高重要度', t_rel: '新關係', t_rel_d: '筆累計', t_mw: '本週涉及 MW', t_usd: '已揭露', t_entities: '追蹤對象', t_active: '個有動態', t_cand: '建議新增', t_pending: '待決定',
-       footer: '僅使用免費來源：Google News RSS、DCD、Utility Dive、Data Center Frontier、CTVC、Canary Media、Latitude Media。分類由 Claude 完成，分析師每週審閱頭條。金額與 MW 為模型估計，引用前請核對來源連結。'}
+       footer: 'Free sources only: Google News RSS, DCD, Utility Dive, Data Center Frontier, CTVC, Canary Media, Latitude Media. Classification by Claude; the analyst reviews headlines weekly. Money and MW figures are model estimates — verify against the source link before quoting.'}
 };
-let LANG = 'en'; try { LANG = localStorage.getItem('cb-lang') || (navigator.language.startsWith('zh') ? 'zh' : 'en'); } catch (e) {}
+const LANG = 'en';  // the public board is English-only; the analyst's workbench is bilingual
 const T = k => I18N[LANG][k] ?? k;
 const L = (kind, code) => (D.labels[kind]?.[code]?.[LANG]) || (D.labels[kind]?.[code]?.en) || (code || 'other');
 const LAYERS = Object.keys(D.labels.value_chain);
@@ -212,13 +199,9 @@ function applyI18n(){
   document.documentElement.lang = LANG === 'zh' ? 'zh-Hant' : 'en';
   document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = T(el.dataset.i18n));
   document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = T(el.dataset.i18nPh));
-  document.getElementById('lang-en').classList.toggle('on', LANG === 'en');
-  document.getElementById('lang-zh').classList.toggle('on', LANG === 'zh');
-  document.getElementById('meta').textContent = (LANG === 'zh' ? '第 ' : 'Week ') + D.week + ' · ' + D.generated_at.replace('T',' ').slice(0,16) + ' UTC';
+  document.getElementById('meta').textContent = 'Week ' + D.week + ' · ' + D.generated_at.replace('T',' ').slice(0,16) + ' UTC';
   renderAll();
 }
-document.getElementById('lang-en').onclick = () => { LANG = 'en'; try { localStorage.setItem('cb-lang','en'); } catch(e){} applyI18n(); };
-document.getElementById('lang-zh').onclick = () => { LANG = 'zh'; try { localStorage.setItem('cb-lang','zh'); } catch(e){} applyI18n(); };
 
 const fL = document.getElementById('f-layer'), fT = document.getElementById('f-type'), fE = document.getElementById('f-entity'), fI = document.getElementById('f-imp'), fQ = document.getElementById('f-q');
 let scopeWeek = true;
@@ -253,7 +236,7 @@ function renderAll(){
   document.getElementById('chart-layers').innerHTML = LAYERS.filter(k => k !== 'other' || lc[k]).map(k => '<div><span class="dot" style="background:' + layerColor(k) + '"></span>' + esc(L('value_chain', k)) + '</div><div class="track"><div class="fill" style="width:' + (lc[k]/lmax*100) + '%;background:' + layerColor(k) + '"></div></div><div class="n">' + lc[k] + '</div>').join('') || '<div class="empty">—</div>';
 
   // weekly view (only when the analyst marked it public)
-  const v = D.weekly_view && (LANG === 'zh' ? (D.weekly_view.zh || D.weekly_view.en) : (D.weekly_view.en || D.weekly_view.zh));
+  const v = D.weekly_view && D.weekly_view.en;
   document.getElementById('view').hidden = !v;
   document.getElementById('view-body').textContent = v || '';
 
@@ -281,7 +264,7 @@ function renderAll(){
   document.getElementById('t-cand').innerHTML = D.candidates.map(c => '<tr><td><b>' + esc(c.name) + '</b>' + (c.domain ? '<div class="sum">' + esc(c.domain) + '</div>' : '') + '</td><td>' + esc(L('entity_types', c.entity_type)) + '</td><td>' + layerTag(c.value_chain) + '</td><td class="num">' + (c.mentions||1) + '</td><td>' + (c.first_url ? '<a href="' + esc(c.first_url) + '" target="_blank" rel="noopener">' + esc((c.first_title||'link').slice(0,70)) + '</a>' : '—') + '</td></tr>').join('');
   document.getElementById('e-cand').hidden = D.candidates.length > 0;
 
-  document.getElementById('foot').innerHTML = '<div class="slogan">' + esc(D.brand.footer_en) + ' · ' + esc(D.brand.footer_zh) + '</div>' + esc(T('footer'));
+  document.getElementById('foot').innerHTML = '<div class="slogan">' + esc(D.brand.footer_en) + '</div>' + esc(T('footer'));
 }
 
 function renderSignals(){

@@ -40,7 +40,7 @@ def test_public_payload_has_no_private_fields(loaded):
     assert payload["signals"][0]["importance"] == 5  # machine score, not the analyst's override
     assert payload["relations"][0]["subject_name"] == "Microsoft"
     html = render_html(snap)
-    assert "SECRET_" not in html and "Current Board" in html and "電流看板" in html
+    assert "SECRET_" not in html and "Current Board" in html and "電流看板" not in html
 
 
 def test_leak_check_catches_private_keys():
@@ -54,7 +54,7 @@ def test_public_view_appears_only_when_flagged(loaded):
     db.save_weekly_view(conn, WEEK, None, None, public=True)
     conn.commit()
     payload = build_payload(snapshot(conn, WEEK, private=False))
-    assert payload["weekly_view"]["zh"].startswith("SECRET_VIEW_ZH")
+    assert "zh" not in payload["weekly_view"]  # the public board carries English only
 
 
 def test_private_report_carries_notes_public_report_does_not(loaded):
@@ -64,7 +64,7 @@ def test_private_report_carries_notes_public_report_does_not(loaded):
     assert "SECRET_NOTE_ZH" in private and "SECRET_LOGIC" in private and "machine said 5" in private
     assert "radar accept" in private and "SECRET_VIEW_ZH" in private
     assert "SECRET_" not in public and "Public edition" in public
-    assert "Microsoft" in public and "buys power from" in public and "微軟" in public
+    assert "Microsoft" in public and "buys power from" in public and "微軟" not in public
 
 
 def test_review_queue_flags_reasons_and_reviewed(loaded):

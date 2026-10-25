@@ -1,12 +1,11 @@
-# Current Board 追蹤名單（The Panel）。直接編輯這個檔案；每次 `radar run` 會把它同步進資料庫。
-# 每個對象必填：name, entity_type, value_chain。代碼必須來自 config/taxonomy.yaml。
-# aliases 用於把新聞對到這個對象（不會拿去搜尋）；domain 是身分證；ticker 給上市公司。
-# 這是公開示範名單；真實名單在私人資料裡，含不公開的 notes 欄位。
+# Current Board — The Panel (public sample). Edit the real file at config/watchlist.yaml; every `radar run` syncs it
+# into the database. Each entity needs name, entity_type and value_chain, with codes from config/taxonomy.yaml.
+# aliases match news to the entity (they are not searched); domain is the identity key; ticker for listed companies.
+# This sample omits the private `notes` field that the real panel carries.
 # region: NA / EU / APAC / MEA / LATAM
-
 companies:
 
-  # ───────── 算力需求端 compute_demand ─────────
+  # ───────── compute_demand ─────────
   - name: OpenAI
     domain: openai.com
     entity_type: ai_lab
@@ -111,7 +110,7 @@ companies:
     ticker: NVDA
     aliases: [Nvidia]
 
-  # ───────── 核能發電 generation_nuclear ─────────
+  # ───────── generation_nuclear ─────────
   - name: Constellation Energy
     domain: constellationenergy.com
     entity_type: utility
@@ -173,7 +172,7 @@ companies:
     region: NA
     aliases: [Kairos]
 
-  # ───────── 其他發電 generation_other ─────────
+  # ───────── generation_other ─────────
   - name: SB Energy
     domain: sbenergy.com
     entity_type: utility
@@ -209,7 +208,7 @@ companies:
     ticker: D
     aliases: [Dominion]
 
-  # ───────── 輸配電與電網設備 transmission_grid ─────────
+  # ───────── transmission_grid ─────────
   - name: GE Vernova
     domain: gevernova.com
     entity_type: public_company
@@ -228,7 +227,7 @@ companies:
     ticker: ENR
     aliases: []
 
-  # ───────── 資料中心實體層 dc_physical ─────────
+  # ───────── dc_physical ─────────
   - name: Vertiv
     domain: vertiv.com
     entity_type: public_company
@@ -256,7 +255,7 @@ companies:
     ticker: ETN
     aliases: [Eaton Corporation]
 
-  # ───────── 資料中心開發 dc_development ─────────
+  # ───────── dc_development ─────────
   - name: Equinix
     domain: equinix.com
     entity_type: public_company
@@ -275,7 +274,7 @@ companies:
     ticker: DLR
     aliases: []
 
-  # ───────── 能源軟體 energy_software（v2 名單保留） ─────────
+  # ───────── energy_software ─────────
   - name: Lunar Energy
     domain: lunarenergy.com
     entity_type: private_startup
@@ -340,5 +339,5 @@ companies:
     region: EU
     aliases: []
 
-# 投資人（選填）。也會從抽取到的募資輪自動建立（status=auto）。
+# Investors (optional). Also created automatically from extracted funding rounds (status=auto).
 investors: []

@@ -1,10 +1,10 @@
-# 資料來源。全部免費、免金鑰。
+# Data sources. All free, no API keys.
 
 google_news:
   hl: en-US
   gl: US
   ceid: "US:en"
-  # 依對象類型選用不同搜尋句型；{name} 會被對象名稱取代。找不到對應類型就用 default。
+  # Query phrasing per entity type; {name} is replaced by the entity name. Falls back to default.
   company_queries:
     default: '"{name}" (data center OR "data centre" OR power OR grid OR nuclear OR electricity OR PPA OR gigawatt OR megawatt)'
     hyperscaler: '"{name}" (data center OR nuclear OR "power purchase" OR PPA OR gigawatt OR capex OR "capital expenditure" OR grid OR electricity)'
@@ -15,7 +15,7 @@ google_news:
     private_startup: '"{name}" (funding OR raises OR raised OR partnership OR launches OR acquires OR acquired OR pilot OR megawatt)'
   investor_query: '"{name}" (energy OR grid OR nuclear OR "data center" OR power) (invests OR leads OR backs OR portfolio)'
 
-# 發現新對象：這些 query 不綁定特定公司，抽取時由 Claude 判斷是否值得追蹤。依價值鏈各層一到兩句。
+# Discovery: queries not tied to a tracked company; Claude decides at extraction whether the subject deserves tracking. One or two per value-chain layer.
 discovery:
   queries:
     # compute_demand
@@ -55,14 +55,14 @@ discovery:
 
 limits:
   max_items_per_query: 20
-  lookback_days: 10          # 每週例行抓取只看最近 N 天
-  backfill_days: 90          # 名單上第一次出現的對象，第一次抓回溯 N 天
+  lookback_days: 10          # the weekly run only looks at the last N days
+  backfill_days: 90          # an entity collected for the first time gets N days of history
   fetch_article_body: true
   body_max_chars: 6000
 
-# 待審清單（review queue）規則：每週只把這些放到你面前，目標 8–12 則
+# Review-queue rules: only these reach the analyst each week, target 8–12 items
 review:
-  min_importance: 4          # 重要度 >= 4 全部進清單
-  money_importance: 3        # 重要度 3 且有金額或 MW 數的也進
+  min_importance: 4          # every signal with importance >= 4
+  money_importance: 3        # importance 3 also qualifies when it carries $ or MW
   max_items: 12
   max_candidates: 3

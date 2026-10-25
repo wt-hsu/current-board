@@ -26,9 +26,10 @@ PRIVATE_KEYS = {
 
 PUBLIC_FIELDS = {
     "signal": ("id", "title", "link", "source", "date", "signal_type", "value_chain", "importance", "summary",
-               "summary_zh", "deal_value_usd", "capacity_mw", "company_slugs", "investor_slugs", "scope"),
+               "deal_value_usd", "capacity_mw", "capacity_kind", "project_stage", "location_name", "location_country",
+               "grid_region", "lat", "lng", "company_slugs", "investor_slugs", "scope"),
     "relation": ("id", "subject_slug", "subject_name", "object_slug", "object_name", "relation_type", "value_usd",
-                 "capacity_mw", "term_years", "confidence", "first_seen", "last_seen", "mentions", "source_url", "source"),
+                 "capacity_mw", "term_years", "value_source", "confidence", "first_seen", "last_seen", "mentions", "source_url", "source"),
     "funding": ("id", "company_slug", "company_name", "value_chain", "date", "round_type", "amount_raw", "amount_usd",
                 "leads", "participants", "confidence", "source_url"),
     "company": ("slug", "name", "domain", "entity_type", "value_chain", "hq_country", "region", "ticker", "status",
@@ -60,12 +61,12 @@ def check_public(obj, path: str = "$") -> None:
 
 def build_payload(snap: dict) -> dict:
     tax = snap["taxonomy"]
-    labels = {kind: {code: {"en": v.get("label_en", code), "zh": v.get("label_zh", code)}
+    labels = {kind: {code: {"en": v.get("label_en", code)}
                      for code, v in (tax.get(kind) or {}).items() if isinstance(v, dict)}
               for kind in ("value_chain", "signal_types", "entity_types", "relation_types")}
     view = snap.get("weekly_view") or {}
     payload = {
-        "brand": BRAND,
+        "brand": {k: v for k, v in BRAND.items() if not k.endswith("_zh")},  # the public board is English-only
         "week": snap["week"],
         "generated_at": snap["generated_at"],
         "labels": labels,
@@ -78,7 +79,7 @@ def build_payload(snap: dict) -> dict:
         "companies": [_pick("company", c) for c in snap["companies"]],
         "investors": [_pick("investor", i) for i in snap["investors"]],
         "candidates": [_pick("candidate", c) for c in snap["candidates"]],
-        "weekly_view": {"zh": view.get("draft_zh"), "en": view.get("draft_en")} if view.get("public") else None,
+        "weekly_view": {"en": view.get("draft_en")} if view.get("public") else None,
         "stats": {k: v for k, v in snap["stats"].items() if k != "last_run"},
     }
     check_public(payload)
