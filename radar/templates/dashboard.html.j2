@@ -5,23 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ brand.name }} · {{ week }}</title>
 <meta name="description" content="{{ brand.tagline_en }} A weekly radar of the power and infrastructure behind AI.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='.55' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2305080f'/%3E%3Cpath d='M35 8 15 36h15l-3 20 22-28H34l1-20z' fill='url(%23g)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script>{{ vendor_d3 }}</script>
 <script>{{ vendor_topojson }}</script>
 <style>
-:root{--bg:#05080f;--panel:#0b1120;--line:#162036;--line2:#223052;--fg:#f1f5ff;--mute:#a7b4cc;--dim:#7f8ca8;
-  --up:#34d399;--down:#f87171;--warn:#fbbf24;--accent:#4f8cff;--blue:#3b82f6;--violet:#8b5cf6;--cyan:#22d3ee;--gen:#f1f5ff;--load:#22d3ee;
-  --h0:#0f1626;--h1:#13223d;--h2:#17315c;--h3:#1f4a8f;--h4:#2f6bd1;--h5:#60a5fa}
+:root{--bg:#070a14;--panel:#0c1222;--line:#172139;--line2:#243457;--fg:#eef3ff;--mute:#9fb0cc;--dim:#7d8bab;
+  --up:#2ee6a6;--down:#ff6b6b;--warn:#ffd166;--accent:#38bdf8;--blue:#3b82f6;--violet:#a78bfa;--cyan:#22e3ee;--gen:#eef3ff;--load:#22e3ee;
+  --h0:#0f172b;--h1:#12264a;--h2:#143a73;--h3:#1a54a8;--h4:#2a82d8;--h5:#5ee0f0}
 *{box-sizing:border-box}
 html{background:var(--bg)}
-body{margin:0;background:var(--bg);font-size:14px;background-image:radial-gradient(1100px 700px at -8% -12%,rgba(59,130,246,.32),transparent 62%),radial-gradient(900px 700px at 108% 104%,rgba(251,146,60,.20),transparent 60%),radial-gradient(600px 400px at 50% 110%,rgba(139,92,246,.12),transparent 60%);background-attachment:fixed;color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;line-height:1.5}
+body{margin:0;background:var(--bg);font-size:14px;background-image:radial-gradient(1000px 640px at -6% -10%,rgba(56,189,248,.20),transparent 60%),radial-gradient(900px 640px at 106% 102%,rgba(167,139,250,.16),transparent 60%),linear-gradient(rgba(148,163,184,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.04) 1px,transparent 1px);background-size:auto,auto,56px 56px,56px 56px;background-attachment:fixed;color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;line-height:1.5}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
 .wrap{max-width:1440px;margin:0 auto;padding:0 28px 48px}
 header{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 24px;padding:22px 0 14px;border-bottom:1px solid var(--line2)}
 header h1{margin:0;font-size:18px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-header h1 .mark{display:inline-block;width:9px;height:17px;background:linear-gradient(180deg,var(--blue),var(--violet));border-radius:2px;margin-right:12px;vertical-align:-2px}
+header h1 .bolt{width:22px;height:22px;margin-right:10px;vertical-align:-5px}
 header .tag{color:var(--mute);font-size:13px;font-style:italic}
 header .ticker{margin-left:auto;display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:var(--mute);letter-spacing:.04em}
 header .ticker b{color:var(--fg);font-weight:600}
@@ -29,15 +30,21 @@ header .ticker b{color:var(--fg);font-weight:600}
 nav{display:flex;flex-wrap:wrap;gap:22px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:12px 0 0}
 nav a{color:var(--mute);padding-bottom:3px}nav a:hover{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--cyan)}
 .grid{display:grid;gap:22px;margin-top:22px}
-.intro{display:flex;flex-direction:column;gap:10px;padding:34px 0 10px;max-width:900px}
+.intro{display:flex;flex-direction:column;gap:8px;padding:30px 0 8px;max-width:900px}
+.lead3{font-size:13px;color:var(--dim);font-style:italic}
 .hero{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
 @media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}}
 .hero .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
-.hero .map{min-height:520px}
+.hero .map{min-height:470px}
 .gh{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
 @media (max-width:980px){.hero,.gh{grid-template-columns:minmax(0,1fr)}}
-.headline{font-size:52px;font-weight:700;letter-spacing:-.02em;line-height:1.05;background:linear-gradient(90deg,#f3f6ff 0%,#7fb0ff 50%,#22d3ee 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:2px}
-.lead{font-size:19px;color:var(--fg);font-weight:500}
+.eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);font-weight:600}
+.headline .rot{display:inline-block;position:relative;min-width:7.2em;text-align:left}
+.headline .rot #rotw{display:inline-block;transition:opacity .35s,transform .35s}
+.headline .rot #rotw.out{opacity:0;transform:translateY(6px)}
+@media (prefers-reduced-motion:reduce){.headline .rot #rotw{transition:none}}
+.headline{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.05;background:linear-gradient(90deg,#f3f6ff 0%,#7fb0ff 50%,#22d3ee 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:2px}
+.lead{font-size:17px;color:var(--fg);font-weight:500}
 .lead2{font-size:14px;color:var(--mute)}
 #map .map{min-height:520px}
 #map.full{position:fixed;inset:0;z-index:50;border-radius:0;margin:0;padding:24px 32px;overflow:auto;background:var(--bg)}
@@ -52,7 +59,7 @@ html{scroll-behavior:smooth}
 .g2{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
 .g2b{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
 @media (max-width:980px){.g2,.g2b{grid-template-columns:minmax(0,1fr)}}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px 24px 24px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,0)),var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px 24px 24px;box-shadow:0 1px 0 rgba(255,255,255,.03) inset;min-width:0;display:flex;flex-direction:column;gap:16px}
 .panel h2::before{content:'';display:inline-block;width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,var(--cyan),var(--blue) 50%,var(--violet));margin-right:12px;vertical-align:-1px}
 .panel.foldable h2{cursor:pointer;user-select:none}
 .panel.foldable h2::before{content:'';width:14px;height:12px;border-radius:0;background:linear-gradient(135deg,var(--cyan),var(--blue) 50%,var(--violet));clip-path:polygon(0 0,100% 0,50% 100%);margin-right:12px;vertical-align:-1px;transition:transform .15s}
@@ -77,7 +84,7 @@ body.howto .howto-btn{background:var(--accent);color:#06101f;border-color:var(--
 @media (max-width:980px){.about{grid-template-columns:minmax(0,1fr)}}
 .statline{display:flex;flex-wrap:wrap;gap:22px;font-size:13px;color:var(--mute)}
 .statline b{color:var(--fg);font-weight:600}
-.fact{font-size:14px;color:var(--fg);border-left:3px solid var(--cyan);padding:4px 0 4px 14px;line-height:1.5}
+.fact{font-size:14px;color:var(--fg);border-left:3px solid var(--cyan);background:linear-gradient(90deg,rgba(34,227,238,.07),transparent 60%);padding:4px 0 4px 14px;line-height:1.5}
 .fact:empty{display:none}
 .chip{border:0;background:transparent;padding:0 0 3px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);cursor:pointer;font-family:inherit}
 .chip:hover{color:var(--fg)}
@@ -92,22 +99,24 @@ body.howto .howto-btn{background:var(--accent);color:#06101f;border-color:var(--
 .tile .v{font-size:38px;font-weight:700;line-height:1.05;letter-spacing:-.01em}
 .tile .v small{font-size:14px;font-weight:400;color:var(--mute);margin-left:2px}
 .tile .d{font-size:13px;color:var(--mute)}
-.tile .d.up{color:var(--up)}.tile .d.down{color:var(--down)}.tile .d.flag{color:var(--warn)}
+.tile .d.up{color:var(--up)}.tile .d.down{color:var(--down)}.tile .d.flag{color:var(--cyan)}
 .tile .n{font-size:12px;color:var(--dim)}
-.tile.hot .v{color:var(--warn);font-size:24px;line-height:1.3}
-.tile.hot{border-left-color:var(--warn)}
+.tile.hot .v{color:var(--cyan);font-size:24px;line-height:1.3}
+.tile.hot{border-left-color:var(--cyan)}
 .tiles3 .tile .v{font-size:22px}
-.heat{display:grid;grid-template-columns:132px repeat(8,minmax(0,1fr));gap:3px;font-size:11px;color:var(--mute);align-items:center}
+.heat{display:grid;grid-template-columns:150px repeat(6,minmax(0,1fr));gap:4px;font-size:12px;color:var(--mute);align-items:center}
 .heat .wk{text-align:center;letter-spacing:.04em}
-.heat .lay{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--mute);padding-right:6px}
+.heat .lay{cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--fg);color:var(--mute);padding-right:6px}
 .heat .lay:hover{color:var(--fg)}
-.heat .c{height:24px;border-radius:3px;position:relative;display:flex;align-items:center;justify-content:center;color:#eaf1ff;font-size:11px;font-weight:500;cursor:pointer}
+.heat .c{height:26px;border-radius:3px;position:relative;display:flex;align-items:center;justify-content:center;color:#f3f7ff;font-size:12px;font-weight:600;cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.heat .c[style*='--h5'],.heat .c[style*='--h4']{color:#061121;text-shadow:none}
 .heat .lgd{grid-column:1 / -1;display:flex;align-items:center;gap:6px;font-size:10px;color:var(--mute);padding-top:8px}
 .heat .lgd i{display:inline-block;width:18px;height:8px;border-radius:2px}
 .heat .c i{position:absolute;top:1px;right:3px;font-style:normal;font-size:8px;color:var(--warn)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);padding:6px 8px;border-bottom:1px solid var(--line2);font-weight:600}
 td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4}
+td.mono:first-child{white-space:nowrap}
 tr.row:hover td{background:#101a30}
 tr.row{cursor:pointer}
 tr.row.new td{background:#17150c}
@@ -119,6 +128,12 @@ td.what{color:var(--mute);font-size:13px}
 .map svg{display:block;width:100%;height:auto}
 .legend{position:absolute;right:10px;bottom:10px;font-size:11px;color:var(--mute);background:#0b1120ee;border-radius:4px;border:1px solid var(--line2);padding:6px 10px;line-height:1.8;letter-spacing:.02em}
 .legend .sw{display:inline-block;width:9px;height:9px;border-radius:5px;vertical-align:-1px;margin-right:5px}
+.zoomctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px}
+.zoomctl button{width:30px;height:30px;border-radius:4px;border:1px solid var(--line2);background:#0b1120ee;color:var(--fg);font-size:15px;cursor:pointer}
+.zoomctl button:hover{border-color:var(--cyan);color:var(--cyan)}
+.tip .tt-h{font-weight:600;margin-bottom:4px;line-height:1.35}
+.tip .tt-r{color:var(--fg)}
+.tip .tt-m{color:var(--mute);font-size:11px;margin-top:4px}
 .tip{position:fixed;pointer-events:none;background:#0b1120;border-radius:6px;border:1px solid var(--line2);color:var(--fg);padding:8px 10px;font-size:12px;max-width:320px;z-index:10;display:none;line-height:1.45}
 .circuit{position:relative;min-height:420px;max-width:1100px;margin:0 auto;width:100%}
 .clegend{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:11px;color:var(--mute);justify-content:center}
@@ -147,6 +162,9 @@ input{flex:1;min-width:200px}
 .more:hover{color:var(--fg)}
 .divider{text-align:center;font-size:11px;color:var(--mute);padding-top:14px;margin-top:28px;letter-spacing:.18em}
 .panel.fold .body{display:none}
+.panel.foldable .body{order:1}
+.panel.foldable .fact{order:2}
+.panel.foldable .q{order:0}
 .panel.fold .fact{margin-top:-4px}
 .panel h2 .toggle{margin-left:4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);cursor:pointer;font-weight:500;white-space:nowrap}
 .panel h2 .toggle::before{content:'▸ expand'}
@@ -155,20 +173,25 @@ input{flex:1;min-width:200px}
 footer{margin-top:40px;border-top:1px solid var(--line2);padding-top:12px;font-size:11px;color:var(--mute);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 .detail{font-size:13px;color:var(--mute);padding:4px 8px 12px 44px;line-height:1.5}
 .stage0{opacity:.4}.stage1{opacity:.85}.stage2{opacity:1}
+.panel h2 .leader{flex:1 1 20px;min-width:20px;border-top:1px dotted var(--line2);align-self:center;margin:0 6px}
+.panel h2 .right{margin-left:0}
+.panel h2 .toggle:last-child{margin-left:0}
+td .vs-d{color:var(--cyan)}td .vs-r{color:var(--mute)}td .vs-e{color:var(--dim)}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1><span class="mark"></span>{{ brand.name }}</h1>
+  <h1><svg class="bolt" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="boltg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".55" stop-color="#3b82f6"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="url(#boltg)"/></svg>{{ brand.name }}</h1>
   <span class="tag">{{ brand.tagline_en }}</span>
   <div class="ticker mono" id="ticker"></div>
 </header>
 <nav><a href="#numbers">Numbers</a><a href="#activity">Activity</a><a href="#deals">Deals</a><a href="#map">Map</a><a href="#circuits">Circuits</a><a href="#feed">Signals</a><a href="#panel">The Panel</a><a href="latest-report.md">Weekly report</a><a href="#about">About</a><button class="howto-btn" id="howto">How to read this board</button></nav>
 
-<div class="intro"><div class="headline">Follow the current.</div>
+<div class="intro"><div class="headline">Tracking the current in <span class="rot"><span id="rotw">electricity</span></span></div>
   <div class="lead">Who powers AI, who pays, and why now.</div>
-  <div class="lead2">A weekly radar of the electricity behind AI compute · updated Mondays · every line links to its source</div></div>
+  <div class="lead2">A weekly radar of the electricity behind AI compute · updated Mondays · every line links to its source</div>
+  <div class="lead3">Why the name: <i>current</i> is electricity, capital flow, and what is happening now; a <i>board</i> is a switchboard and a scoreboard.</div></div>
 <div class="grid hero">
   <section class="panel" id="numbers">
     <h2>This week in numbers <span class="info" title="Machine-counted, week over week. The two kinds of MW are never added together.">i</span></h2>
@@ -182,7 +205,7 @@ footer{margin-top:40px;border-top:1px solid var(--line2);padding-top:12px;font-s
     <div class="fact" id="fact4"></div>
     <div class="body">
     
-    <div class="map" id="mapbox"><div class="legend"><span class="sw" style="background:var(--load)"></span>Data center · IT load (MW)<br><span class="sw" style="border:2px solid var(--gen);background:transparent"></span>Generation · nameplate (MW)<br>faded = announced · solid = contracted · ring = operational<br><span class="sw" style="background:var(--warn);box-shadow:0 0 8px var(--warn)"></span>glow = this week</div></div>
+    <div class="map" id="mapbox"><div class="legend"><span class="sw" style="background:var(--load)"></span>Data center · IT load (MW)<br><span class="sw" style="border:2px solid var(--gen);background:transparent"></span>Generation · nameplate (MW)<br>faded = announced · solid = contracted · ring = operational<br><span class="sw" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></span>glow = this week · <span class="sw" style="background:var(--blue);box-shadow:0 0 8px var(--blue)"></span>last week</div><div class="zoomctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zreset" aria-label="Reset zoom">⟲</button></div></div>
   </div>
   </section>
 </div>
@@ -263,8 +286,14 @@ footer{margin-top:40px;border-top:1px solid var(--line2);padding-top:12px;font-s
 <script id="world" type="application/json">{{ world_json }}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
-document.querySelectorAll('.panel h2 .info').forEach(i => { const q = document.createElement('div'); q.className = 'q'; q.textContent = i.title; const h = i.closest('h2'); h.parentNode.insertBefore(q, h.nextSibling); });
+const tip = document.getElementById('tip');
+const showTip = (ev, html) => { tip.innerHTML = html; tip.style.display = 'block'; tip.style.left = Math.min(ev.clientX + 14, window.innerWidth - 340) + 'px'; tip.style.top = (ev.clientY + 14) + 'px'; };
+const hideTip = () => tip.style.display = 'none';
+document.querySelectorAll('.panel h2 .info').forEach(i => { const q = document.createElement('div'); q.className = 'q'; q.textContent = i.title; const h = i.closest('h2'); h.parentNode.insertBefore(q, h.nextSibling); i.dataset.tip = i.title; i.removeAttribute('title'); i.addEventListener('mousemove', ev => showTip(ev, '<div class="tt-r">' + esc(i.dataset.tip) + '</div>')); i.addEventListener('mouseleave', hideTip); });
 document.getElementById('howto').onclick = () => document.body.classList.toggle('howto');
+{ const words = ['electricity', 'capital flow', 'power contracts', 'grid capacity', 'policy', 'what is happening now']; let wi = 0; const el = document.getElementById('rotw');
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => { el.classList.add('out'); setTimeout(() => { wi = (wi + 1) % words.length; el.textContent = words[wi]; el.classList.remove('out'); }, 360); }, 2600); }
+document.querySelectorAll('.panel h2').forEach(h => { const lead = document.createElement('span'); lead.className = 'leader'; const anchor = h.querySelector('.fsbtn, .right, .toggle'); if (anchor) h.insertBefore(lead, anchor); else h.appendChild(lead); });
 document.querySelectorAll('.panel.foldable h2').forEach(h => h.addEventListener('click', ev => { if (ev.target.closest('.right, .fsbtn, .info, select, input')) return; h.closest('.panel').classList.toggle('fold'); }));
 const fsbtn = document.getElementById('fsbtn'); fsbtn.onclick = () => { const m = document.getElementById('map'); m.classList.toggle('full'); fsbtn.textContent = m.classList.contains('full') ? '✕ Close' : '⤢ Full screen'; };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('map').classList.remove('full'); fsbtn.textContent = '⤢ Full screen'; } });
@@ -289,8 +318,11 @@ function isoWeek(dateStr){ const d = new Date(dateStr + 'T00:00:00Z'); const day
   return y + '-W' + String(w).padStart(2,'0'); }
 function weekMonday(week){ const [y,w] = week.split('-W').map(Number); const jan4 = new Date(Date.UTC(y,0,4)); const day=(jan4.getUTCDay()+6)%7; const mon = new Date(jan4); mon.setUTCDate(jan4.getUTCDate()-day+(w-1)*7); return mon; }
 function addWeeks(week, n){ const m = weekMonday(week); m.setUTCDate(m.getUTCDate()+7*n); return isoWeek(m.toISOString().slice(0,10)); }
-const WEEKS = [...Array(8)].map((_, i) => addWeeks(D.week, i - 7));
-const PREV = WEEKS[6];
+const WEEKS8 = [...Array(8)].map((_, i) => addWeeks(D.week, i - 7));
+const WEEKS = WEEKS8.slice(2);  // six weeks shown; the baseline still uses eight
+const PREV = WEEKS[4];
+const SHORT = {compute_demand:'Compute demand', generation_nuclear:'Nuclear', generation_other:'Gas & onsite', transmission_grid:'Grid equipment', storage:'Storage', dc_physical:'DC power & cooling', dc_development:'DC development', offtake_markets:'PPAs & markets', energy_software:'Energy software', policy_regulation:'Policy', other:'Other'};
+const SL = code => SHORT[code] || L('value_chain', code);
 D.signals.forEach(s => { s.week = s.date ? isoWeek(s.date) : null; s.companies = (s.company_slugs||[]).map(k => byCompany[k]?.name).filter(Boolean); });
 D.relations.forEach(r => { r.week_first = r.first_seen ? isoWeek(r.first_seen.slice(0,10)) : null; });
 
@@ -323,11 +355,12 @@ const N = numbers(D.week), P = numbers(PREV);
 const delta = (a, b, fmt) => { const d = a - b; if (!b && !a) return {cls:'', txt:'— WoW'}; return {cls: d > 0 ? 'up' : d < 0 ? 'down' : '', txt: (d > 0 ? '▲ ' : d < 0 ? '▼ ' : '— ') + fmt(Math.abs(d)) + ' WoW'}; };
 
 // activity grid + hottest layer
-const grid = {}; LAYERS.forEach(l => { grid[l] = WEEKS.map(w => { const e = evWeek(w).filter(x => x.value_chain === l); return {n: e.length, max: e.length ? Math.max(...e.map(x => x.importance||1)) : 0}; }); });
-function zscore(l){ const xs = grid[l].map(c => c.n); const hist = xs.slice(0,7); const m = hist.reduce((a,b)=>a+b,0)/7; const sd = Math.sqrt(hist.reduce((a,b)=>a+(b-m)*(b-m),0)/7) || 1; return (xs[7]-m)/sd; }
+const grid8 = {}; LAYERS.forEach(l => { grid8[l] = WEEKS8.map(w => { const e = evWeek(w).filter(x => x.value_chain === l); return {n: e.length, max: e.length ? Math.max(...e.map(x => x.importance||1)) : 0}; }); });
+const grid = {}; LAYERS.forEach(l => grid[l] = grid8[l].slice(2));
+function zscore(l){ const xs = grid8[l].map(c => c.n); const hist = xs.slice(0,7); const m = hist.reduce((a,b)=>a+b,0)/7; const sd = Math.sqrt(hist.reduce((a,b)=>a+(b-m)*(b-m),0)/7) || 1; return (xs[7]-m)/sd; }
 const Z = Object.fromEntries(LAYERS.filter(l => l !== 'other').map(l => [l, zscore(l)]));
 const hot = Object.entries(Z).sort((a,b) => b[1]-a[1])[0]?.[0];
-const prevZ = Object.fromEntries(LAYERS.filter(l => l !== 'other').map(l => { const xs = grid[l].map(c=>c.n); const hist = xs.slice(0,6); const m = hist.reduce((a,b)=>a+b,0)/6; const sd = Math.sqrt(hist.reduce((a,b)=>a+(b-m)*(b-m),0)/6)||1; return [l,(xs[6]-m)/sd]; }));
+const prevZ = Object.fromEntries(LAYERS.filter(l => l !== 'other').map(l => { const xs = grid8[l].map(c=>c.n); const hist = xs.slice(0,6); const m = hist.reduce((a,b)=>a+b,0)/6; const sd = Math.sqrt(hist.reduce((a,b)=>a+(b-m)*(b-m),0)/6)||1; return [l,(xs[6]-m)/sd]; }));
 const prevHot = Object.entries(prevZ).sort((a,b)=>b[1]-a[1])[0]?.[0];
 
 document.getElementById('ticker').innerHTML = `<span>${D.week.replace('-W',' · W')}</span><span><b>${N.signals}</b> signals from <b>${new Set(sigWeek(D.week).map(s=>s.source)).size}</b> sources</span><span><b>${N.deals}</b> deals</span><span><b>${N.circuits}</b> new circuits</span><span>last run ${D.generated_at.replace('T',' ').slice(0,16)} UTC</span>`;
@@ -335,7 +368,7 @@ document.getElementById('srcnote').textContent = '· based on ' + new Set(D.sign
 
 const g = delta(N.gen, P.gen, fmtMwNum), lo = delta(N.load, P.load, fmtMwNum), dl = delta(N.deals, P.deals, v => v);
 document.getElementById('tiles1').innerHTML = `
-  <div class="tile"><div class="l">Generation contracted</div><div class="v mono">${N.gen ? fmtMwNum(N.gen) : '—'}</div><div class="d mono ${g.cls}">${g.txt}</div><div class="n">nameplate · PPAs signed · ≈ ${(N.gen/1000).toFixed(1)} large reactors</div></div>
+  <div class="tile"><div class="l">Generation contracted</div><div class="v mono">${N.gen ? fmtMwNum(N.gen) : '—'}</div><div class="d mono ${g.cls}">${g.txt}</div><div class="n">nameplate · PPAs signed${N.gen >= 500 ? ' · ≈ ' + (N.gen/1000).toFixed(1) + ' large reactors' : ''}</div></div>
   <div class="tile"><div class="l">DC load announced</div><div class="v mono">${N.load ? fmtMwNum(N.load) : '—'}</div><div class="d mono ${lo.cls}">${lo.txt}</div><div class="n">IT load · new campuses · de-duplicated</div></div>
   <div class="tile"><div class="l">Disclosed value</div><div class="v mono">${N.disclosed ? fmtUsd(N.disclosed) : '—'}</div><div class="d mono">${N.disclosedN} of ${N.circuits} new relations disclosed</div><div class="n">no model estimates in this number</div></div>
   <div class="tile hot"><div class="l">Hottest layer</div><div class="v">${hot ? L('value_chain', hot) : '—'}</div><div class="d flag mono">${prevHot && prevHot !== hot ? '⚑ was: ' + L('value_chain', prevHot) : '— unchanged'}</div><div class="n">largest move vs its 8-week average</div></div>`;
@@ -353,21 +386,21 @@ document.getElementById('tiles2').innerHTML = `
     top ? `Biggest signal this week: ${top.title}.` : ''; }
 
 // ---- activity grid ----
-{ const h = document.getElementById('heat'); let html = '<div></div>' + WEEKS.map((w,i) => `<div class="wk ${i===7?'mono':''}" style="${i===7?'color:var(--fg);font-weight:700':''}">${w.slice(5)}</div>`).join('');
+{ const h = document.getElementById('heat'); const LAST = WEEKS.length - 1; let html = '<div></div>' + WEEKS.map((w,i) => `<div class="wk ${i===LAST?'mono':''}" style="${i===LAST?'color:var(--fg);font-weight:700':''}">${w.slice(5)}</div>`).join('');
   const shade = z => z >= 2 ? 'var(--h5)' : z >= 1.2 ? 'var(--h4)' : z >= 0.5 ? 'var(--h3)' : z >= 0 ? 'var(--h2)' : z >= -0.5 ? 'var(--h1)' : 'var(--h0)';
   const GROUPS = [['Demand', ['compute_demand','dc_development']], ['Supply', ['generation_nuclear','generation_other','storage','offtake_markets']], ['Enablers', ['transmission_grid','dc_physical','energy_software','policy_regulation']]];
   const grouped = GROUPS.flatMap(g => g[1].filter(l => LAYERS.includes(l))); const rest = LAYERS.filter(l => !grouped.includes(l) && l !== 'other');
   const ORDER = GROUPS.map(g => [g[0], g[1].filter(l => LAYERS.includes(l))]).concat(rest.length ? [['Other', rest]] : []);
-  ORDER.forEach(([gname, ls]) => { html += `<div class="grp">${gname}</div>`; ls.forEach(l => { html += `<div class="lay" data-layer="${l}" title="${esc(L('value_chain',l))}">${esc(L('value_chain',l))}</div>`;
-    grid[l].forEach((c,i) => { const xs = grid[l].map(x=>x.n); const hist = xs.slice(0, Math.max(1,i)); const m = hist.reduce((a,b)=>a+b,0)/hist.length; const sd = Math.sqrt(hist.reduce((a,b)=>a+(b-m)*(b-m),0)/hist.length)||1; const z = i===0 ? 0 : (c.n-m)/sd;
+  ORDER.forEach(([gname, ls]) => { html += `<div class="grp">${gname}</div>`; ls.forEach(l => { html += `<div class="lay" data-layer="${l}" title="${esc(L('value_chain',l))}">${esc(SL(l))}</div>`;
+    grid[l].forEach((c,i) => { const xs = grid8[l].map(x=>x.n); const hist = xs.slice(0, Math.max(1,i+2)); const m = hist.reduce((a,b)=>a+b,0)/hist.length; const sd = Math.sqrt(hist.reduce((a,b)=>a+(b-m)*(b-m),0)/hist.length)||1; const z = (c.n-m)/sd;
       html += `<div class="c" data-layer="${l}" data-week="${WEEKS[i]}" style="background:${c.n ? shade(z) : 'var(--h0)'}" title="${esc(L('value_chain',l))} · ${WEEKS[i]} · ${c.n} events${c.max?` · top impact ${c.max}`:''}">${c.n || ''}${c.max >= 5 ? '<i>▲</i>' : ''}</div>`; }); }); });
   html += `<div class="lgd"><span>below average</span><i style="background:var(--h0)"></i><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i><span>far above its 8-week average</span></div>`;
   h.innerHTML = html;
   h.querySelectorAll('.lay,.c').forEach(el => el.onclick = () => { fL.value = el.dataset.layer; if (el.dataset.week === D.week) fW.value = 'week'; else fW.value = 'all'; renderFeed(); unfold('feed'); location.hash = '#feed'; });
-  const ranked = Object.entries(Z).filter(([l,z]) => grid[l][7].n > 0).sort((a,b)=>b[1]-a[1]);
+  const ranked = Object.entries(Z).filter(([l,z]) => grid8[l][7].n > 0).sort((a,b)=>b[1]-a[1]);
   const f2 = document.getElementById('fact2');
   if (!ranked.length) f2.textContent = 'No layer moved above its baseline this week.';
-  else { const [l,z] = ranked[0]; const xs = grid[l].map(c=>c.n); const avg = xs.slice(0,7).reduce((a,b)=>a+b,0)/7; f2.textContent = avg > 0 ? `${L('value_chain',l)} ran ${(xs[7]/avg).toFixed(1)}× its 8-week average (${xs[7]} events).` : `${L('value_chain',l)} appeared for the first time in 8 weeks (${xs[7]} events).`; } }
+  else { const [l,z] = ranked[0]; const xs = grid8[l].map(c=>c.n); const avg = xs.slice(0,7).reduce((a,b)=>a+b,0)/7; f2.textContent = avg > 0 ? `${L('value_chain',l)} ran ${(xs[7]/avg).toFixed(1)}× its 8-week average (${xs[7]} events).` : `${L('value_chain',l)} appeared for the first time in 8 weeks (${xs[7]} events).`; } }
 
 // ---- deals ----
 const relByUrl = {}; D.signals.forEach(s => { relByUrl[s.link] = s; });
@@ -389,10 +422,11 @@ function renderDeals(tab){
     const parties = x.kind === 'rel' ? `<b>${esc(x.r.subject_name)}</b> ${esc(L('relation_types', x.r.relation_type))} <b>${esc(x.r.object_name)}</b>` : `<b>${esc((x.sig.companies||[])[0] || x.sig.source)}</b> builds out`;
     const what = x.sig ? esc(x.sig.summary || x.sig.title) : esc(x.r.subject_name + ' → ' + x.r.object_name);
     const vs = x.kind === 'rel' ? (x.r.value_source || 'est.') : 'est.';
+    const vcls = vs === 'disclosed' ? 'vs-d' : vs === 'reported' ? 'vs-r' : 'vs-e';
     const tag = x.value == null ? '' : `<span style="font-size:9px;color:var(--dim)"> ${vs === 'disclosed' ? '' : vs === 'reported' ? 'rep.' : 'est.'}</span>`;
     const link = x.kind === 'rel' ? x.r.source_url : x.sig.link;
     const extraTd = tab === 'PPA' ? `<td class="num mono">${x.r?.term_years ? x.r.term_years + 'y' : '—'}</td>` : tab === 'Funding' ? `<td class="mono">${esc(x.r?.relation_type ? '' : '')}—</td>` : '';
-    html += `<tr class="row${x.isNew ? ' new' : ''}"><td class="mono">${esc(x.date.slice(5))}</td><td>${parties}${x.isNew ? ' <span class="mono" style="color:var(--warn);font-size:9px;letter-spacing:.12em">NEW</span>' : ''}</td><td class="what">${what.slice(0,120)}</td><td class="num mono">${x.size ? fmtMw(x.size) : '—'}</td><td class="num mono">${x.value ? fmtUsd(x.value) : '—'}${tag}</td>${extraTd}<td>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">↗</a>` : ''}</td></tr>`;
+    html += `<tr class="row${x.isNew ? ' new' : ''}"><td class="mono">${esc(x.date.slice(5))}</td><td>${parties}${x.isNew ? ' <span class="mono" style="color:var(--warn);font-size:9px;letter-spacing:.12em">NEW</span>' : ''}</td><td class="what">${what.length > 96 ? what.slice(0,96) + '…' : what}</td><td class="num mono">${x.size ? fmtMw(x.size) : '—'}</td><td class="num mono"><span class="${vcls}">${x.value ? fmtUsd(x.value) : '—'}</span>${tag}</td>${extraTd}<td>${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">↗</a>` : ''}</td></tr>`;
   });
   document.getElementById('dealtable').innerHTML = html;
 }
@@ -404,9 +438,6 @@ function renderDeals(tab){
   document.getElementById('fact3').textContent = newRels.length ? `${ppa} of ${newRels.length} new relations this week were power contracts; ${disc} disclosed a value.` : 'No new relations extracted this week yet.'; }
 
 // ---- map ----
-const tip = document.getElementById('tip');
-const showTip = (ev, html) => { tip.innerHTML = html; tip.style.display = 'block'; tip.style.left = Math.min(ev.clientX + 14, window.innerWidth - 340) + 'px'; tip.style.top = (ev.clientY + 14) + 'px'; };
-const hideTip = () => tip.style.display = 'none';
 function renderMap(kind){
   const box = document.getElementById('mapbox'); box.querySelectorAll('svg').forEach(s => s.remove());
   const W = 900, H = 460;
@@ -416,21 +447,27 @@ function renderMap(kind){
   const proj = d3.geoNaturalEarth1().fitSize([W, H], {type:'Sphere'});
   const path = d3.geoPath(proj);
   const defs = svg.append('defs'); const f = defs.append('filter').attr('id', 'glow').attr('x', '-100%').attr('y', '-100%').attr('width', '300%').attr('height', '300%'); f.append('feGaussianBlur').attr('stdDeviation', 6);
-  svg.append('path').datum({type:'Sphere'}).attr('d', path).attr('fill', '#070d19');
-  svg.append('g').selectAll('path').data(land.features).join('path').attr('d', path).attr('fill', '#121b30').attr('stroke', '#070d19').attr('stroke-width', .5);
+  const zoomG = svg.append('g');
+  zoomG.append('path').datum({type:'Sphere'}).attr('d', path).attr('fill', '#070d19');
+  zoomG.append('g').selectAll('path').data(land.features).join('path').attr('d', path).attr('fill', '#121b30').attr('stroke', '#070d19').attr('stroke-width', .5);
   const pts = EV.filter(e => e.lat != null && e.lng != null && e.capacity_mw && WEEKS.includes(e.week) && (kind === 'all' || e.capacity_kind === kind));
   const r = d3.scaleSqrt().domain([0, Math.max(100, d3.max(pts, p => p.capacity_mw) || 100)]).range([2, 22]);
   const stageCls = s => s === 'operational' ? 'stage2' : s === 'contracted' || s === 'under_construction' ? 'stage1' : 'stage0';
-  const gpts = svg.append('g');
+  const gpts = zoomG.append('g');
   pts.sort((a,b) => b.capacity_mw - a.capacity_mw).forEach(p => {
     const [x, y] = proj([p.lng, p.lat]) || [null, null]; if (x == null) return;
     const isLoad = p.capacity_kind === 'it_load';
-    if (p.week === D.week || p.week === PREV) gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw) + 6).attr('fill', p.week === D.week ? 'var(--warn)' : 'var(--blue)').attr('opacity', p.week === D.week ? .55 : .35).attr('class', 'glow');
+    if (p.week === D.week || p.week === PREV) gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw) + 6).attr('fill', p.week === D.week ? 'var(--cyan)' : 'var(--blue)').attr('opacity', p.week === D.week ? .5 : .32).attr('class', 'glow');
     const c = gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw)).attr('class', stageCls(p.project_stage))
       .attr('fill', isLoad ? 'var(--load)' : '#0a1120').attr('fill-opacity', isLoad ? .85 : .9).attr('stroke', isLoad ? '#a5f3fc' : 'var(--gen)').attr('stroke-width', isLoad ? 1 : 2).style('cursor', 'pointer');
-    if (p.project_stage === 'operational') gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw) + 3).attr('fill', 'none').attr('stroke', 'var(--warn)').attr('stroke-width', 1);
-    c.on('mousemove', ev => showTip(ev, `<b>${esc(p.title)}</b><br>${fmtMwNum(p.capacity_mw)} · ${esc(p.capacity_kind === 'it_load' ? 'IT load' : 'nameplate')} · ${esc(p.project_stage || 'stage n/a')}<br>${esc(p.location_name || '')}${p.grid_region ? ' · ' + esc(p.grid_region) : ''} · ${esc(p.date)}<br><span style="color:var(--mute)">${esc(p.source)} · Impact ${p.importance}</span>`)).on('mouseleave', hideTip).on('click', () => window.open(p.link, '_blank'));
+    if (p.project_stage === 'operational') gpts.append('circle').attr('cx', x).attr('cy', y).attr('r', r(p.capacity_mw) + 3).attr('fill', 'none').attr('stroke', 'var(--violet)').attr('stroke-width', 1.2);
+    c.on('mousemove', ev => showTip(ev, `<div class="tt-h">${esc(p.title)}</div>${p.companies.length ? `<div class="tt-r">${esc(p.companies.join(' · '))}</div>` : ''}<div class="tt-r"><b>${fmtMwNum(p.capacity_mw)}</b> ${esc(p.capacity_kind === 'it_load' ? 'IT load' : 'nameplate')} · ${esc((p.project_stage || 'stage n/a').replace('_',' '))}</div><div class="tt-r">${esc(p.location_name || 'location n/a')}${p.grid_region ? ' · ' + esc(p.grid_region) : ''}</div><div class="tt-m">${esc(p.date)} · ${esc(p.source)} · Impact ${p.importance} · click to open source ↗</div>`)).on('mouseleave', hideTip).on('click', () => window.open(p.link, '_blank'));
   });
+  const zoom = d3.zoom().scaleExtent([1, 8]).translateExtent([[0,0],[W,H]]).on('zoom', ev => { zoomG.attr('transform', ev.transform); gpts.selectAll('circle').attr('stroke-width', function(){ return (this.classList.contains('glow') ? 0 : (d3.select(this).attr('fill') === 'transparent' ? 2 : 1.2)) / ev.transform.k; }); });
+  svg.call(zoom);
+  document.getElementById('zin').onclick = () => svg.transition().call(zoom.scaleBy, 1.6);
+  document.getElementById('zout').onclick = () => svg.transition().call(zoom.scaleBy, 1/1.6);
+  document.getElementById('zreset').onclick = () => svg.transition().call(zoom.transform, d3.zoomIdentity);
   const byRegion = {}; pts.filter(p => p.week === D.week || p.week === PREV).forEach(p => { const k = p.grid_region || p.location_country || '?'; byRegion[k] = (byRegion[k]||0) + p.capacity_mw; });
   const tot = Object.values(byRegion).reduce((a,b)=>a+b,0); const top2 = Object.entries(byRegion).sort((a,b)=>b[1]-a[1]).slice(0,2);
   document.getElementById('fact4').textContent = !pts.length ? 'No located projects in the last 8 weeks yet — locations arrive with extraction.' :
@@ -444,7 +481,7 @@ function column(slug, name){ const c = byCompany[slug]; if (!c) return 1; if (c.
 function renderCircuits(rel){
   const box = document.getElementById('circuitbox'); box.innerHTML = '';
   let rels = D.relations.filter(r => rel === 'all' || r.relation_type === rel).filter(r => r.relation_type !== 'regulates');
-  rels.sort((a,b) => ((b.value_usd||0) + (b.capacity_mw||0)*1e6) - ((a.value_usd||0) + (a.capacity_mw||0)*1e6)); rels = rels.slice(0, 15);
+  rels.sort((a,b) => ((b.value_usd||0) + (b.capacity_mw||0)*1e6) - ((a.value_usd||0) + (a.capacity_mw||0)*1e6)); rels = rels.slice(0, 12);
   if (!rels.length) { box.innerHTML = '<div style="padding:20px;color:var(--dim)">No relations on record yet.</div>'; document.getElementById('fact5').textContent = ''; return; }
   const nodes = new Map();
   rels.forEach(r => { [[r.subject_slug, r.subject_name], [r.object_slug, r.object_name]].forEach(([s,n]) => { const key = s || n; if (!nodes.has(key)) nodes.set(key, {key, name: n, col: column(s, n), deg: 0}); nodes.get(key).deg++; }); });
@@ -456,15 +493,20 @@ function renderCircuits(rel){
   const gd = svg.append('defs').append('linearGradient').attr('id', 'nodegrad').attr('x1', 0).attr('x2', 1).attr('y1', 0).attr('y2', 1); gd.append('stop').attr('offset', '0%').attr('stop-color', '#22d3ee'); gd.append('stop').attr('offset', '55%').attr('stop-color', '#3b82f6'); gd.append('stop').attr('offset', '100%').attr('stop-color', '#8b5cf6');
   [['DEMAND', X[0]], ['COMPUTE / DEVELOPMENT', X[1]], ['SUPPLY', X[2]]].forEach(([t,x]) => svg.append('text').attr('x', x).attr('y', 22).attr('text-anchor', 'middle').attr('fill', 'var(--mute)').attr('font-size', 11).attr('font-weight', 700).attr('letter-spacing', 2.5).attr('font-family', 'Inter, sans-serif').text(t));
   const maxV = d3.max(rels, r => (r.value_usd||0) + (r.capacity_mw||0)*1e6) || 1;
-  const edges = svg.append('g'), nodesG = svg.append('g'), labels = svg.append('g');
+  const edges = svg.append('g'), nodesG = svg.append('g'), labels = svg.append('g'); const placed = [];
   rels.forEach((r, ei) => { const a = nodes.get(r.subject_slug || r.subject_name), b = nodes.get(r.object_slug || r.object_name); const isNew = r.week_first === D.week;
-    const w = 1 + 4 * (((r.value_usd||0) + (r.capacity_mw||0)*1e6) / maxV);
+    const w = 1.2 + 2.3 * Math.sqrt(((r.value_usd||0) + (r.capacity_mw||0)*1e6) / maxV);
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
     const sameCol = a.x === b.x; const cx = sameCol ? a.x + 120 : mx, cy = sameCol ? my : my - Math.abs(b.y - a.y) * .15;
     edges.append('path').attr('d', `M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`).attr('fill', 'none').attr('stroke', isNew ? 'var(--warn)' : '#3a4a6a').attr('stroke-width', w).attr('stroke-dasharray', r.relation_type === 'invests_in' ? '6 4' : null).attr('opacity', .95);
     const label = [r.capacity_mw ? fmtMw(r.capacity_mw) : null, r.value_usd ? fmtUsd(r.value_usd) : null, r.term_years ? r.term_years + 'y' : null].filter(Boolean).join(' · ') || L('relation_types', r.relation_type);
-    const text = label + (isNew ? ' · NEW' : ''); const tpos = sameCol ? .5 : (0.38 + (ei % 3) * 0.12); const bz = t => ({x: (1-t)*(1-t)*a.x + 2*(1-t)*t*cx + t*t*b.x, y: (1-t)*(1-t)*a.y + 2*(1-t)*t*cy + t*t*b.y}); const pt = bz(tpos); const lx = sameCol ? a.x + 70 : pt.x, ly = sameCol ? my : pt.y;
-    const lg = labels.append('g').attr('transform', `translate(${lx},${ly})`).style('cursor', 'pointer');
+    const text = label + (isNew ? ' · NEW' : ''); const tpos = sameCol ? .5 : (0.42 + (ei % 4) * 0.1); const bz = t => ({x: (1-t)*(1-t)*a.x + 2*(1-t)*t*cx + t*t*b.x, y: (1-t)*(1-t)*a.y + 2*(1-t)*t*cy + t*t*b.y}); const pt = bz(tpos); const lx = sameCol ? a.x + 70 : pt.x, ly = sameCol ? my : pt.y;
+    let lx2 = lx, ly2 = ly; const pw0 = text.length * 6.2 + 14;
+    // keep the pill clear of both endpoint boxes and of pills already placed
+    nodes.forEach(q => { if (Math.abs(q.x - lx2) < 70 + pw0/2 && Math.abs(q.y - ly2) < 24) ly2 = q.y + (ly2 >= q.y ? 26 : -26); });
+    placed.forEach(q => { if (Math.abs(q.x - lx2) < (q.w + pw0)/2 + 6 && Math.abs(q.y - ly2) < 20) ly2 = q.y + 22; });
+    placed.push({x: lx2, y: ly2, w: pw0});
+    const lg = labels.append('g').attr('transform', `translate(${lx2},${ly2})`).style('cursor', 'pointer');
     const pw = text.length * 6.2 + 14;
     lg.append('rect').attr('x', -pw/2).attr('y', -9).attr('width', pw).attr('height', 18).attr('rx', 9).attr('fill', '#0f1626').attr('stroke', isNew ? 'var(--warn)' : 'var(--line2)').attr('stroke-width', 1);
     lg.append('text').attr('text-anchor', 'middle').attr('dy', 3.5).attr('font-size', 10).attr('fill', isNew ? 'var(--warn)' : 'var(--fg)').attr('font-family', 'JetBrains Mono, monospace').text(text);
@@ -472,7 +514,7 @@ function renderCircuits(rel){
     t.on('mousemove', ev => showTip(ev, `<b>${esc(r.subject_name)}</b> ${esc(L('relation_types', r.relation_type))} <b>${esc(r.object_name)}</b><br>${label}<br><span style="color:var(--mute)">${esc(r.value_source || 'estimated')} · confidence ${Math.round((r.confidence||0)*100)}% · first seen ${esc((r.first_seen||'').slice(0,10))}</span>`)).on('mouseleave', hideTip).on('click', () => r.source_url && window.open(r.source_url, '_blank'));
   });
   nodes.forEach(n => { const g = nodesG.append('g').attr('transform', `translate(${n.x},${n.y})`).style('cursor', 'pointer').on('click', () => { if (byCompany[n.key]) { fE.value = n.key; fW.value = 'all'; renderFeed(); unfold('feed'); location.hash = '#feed'; } });
-    const wdt = Math.max(100, n.name.length * 7.5 + 24);
+    const wdt = Math.max(110, n.name.length * 7.5 + 28);
     g.append('rect').attr('x', -wdt/2).attr('y', -14).attr('width', wdt).attr('height', 28).attr('rx', 6).attr('fill', n.col === 0 ? 'url(#nodegrad)' : n.col === 1 ? '#1a2439' : '#0e1626').attr('stroke', n.col === 2 ? 'var(--accent)' : n.col === 1 ? 'var(--line2)' : 'none').attr('stroke-width', 1.5);
     g.append('text').attr('text-anchor', 'middle').attr('dy', 4).attr('font-size', 12).attr('font-weight', n.col === 0 ? 600 : 500).attr('fill', 'var(--fg)').attr('font-family', 'Inter, sans-serif').text(n.name); });
   const newest = D.relations.filter(r => r.week_first === D.week).sort((a,b)=>((b.value_usd||0)+(b.capacity_mw||0)*1e6)-((a.value_usd||0)+(a.capacity_mw||0)*1e6))[0];
@@ -514,7 +556,7 @@ renderFeed();
   const cards = D.companies.filter(c => c.status === 'active').sort((a,b) => (weekBy[b.slug]||0) - (weekBy[a.slug]||0) || (b.signal_count||0) - (a.signal_count||0));
   let cardLimit = 8;
   const renderCards = () => { document.getElementById('cards').innerHTML = cards.slice(0, cardLimit).map(c => { const h = hist[c.slug]; const mx = Math.max(1, ...h);
-    return `<div class="card" data-slug="${c.slug}"><div class="nm"><span>${esc(c.name)}</span><span class="tag">${esc(L('entity_types', c.entity_type))}</span></div><div class="et mono">${esc(L('value_chain', c.value_chain))}${c.region ? ' · ' + esc(c.region) : ''}</div><div class="spark">${h.map((v,i) => `<i class="${i===7?'now':''}" style="height:${Math.max(2, 18*v/mx)}px" title="${WEEKS[i]}: ${v}"></i>`).join('')}</div><div class="et">${weekBy[c.slug]||0} this week · ${c.signal_count||0} in 90 days · ${c.relation_count||0} circuits</div></div>`; }).join('');
+    return `<div class="card" data-slug="${c.slug}"><div class="nm"><span>${esc(c.name)}</span><span class="tag">${esc(L('entity_types', c.entity_type))}</span></div><div class="et mono">${esc(L('value_chain', c.value_chain))}${c.region ? ' · ' + esc(c.region) : ''}</div><div class="spark">${h.map((v,i) => `<i class="${i===WEEKS.length-1?'now':''}" style="height:${Math.max(2, 18*v/mx)}px" title="${WEEKS[i]}: ${v}"></i>`).join('')}</div><div class="et">${weekBy[c.slug]||0} this week · ${c.signal_count||0} in 90 days · ${c.relation_count||0} circuits</div></div>`; }).join('');
     document.querySelectorAll('.card').forEach(el => el.onclick = () => { fE.value = el.dataset.slug; fW.value = 'all'; feedLimit = 6; renderFeed(); unfold('feed'); location.hash = '#feed'; });
     const m = document.getElementById('cardsmore'); m.textContent = cards.length > cardLimit ? `▾ Show all ${cards.length} on the panel` : cards.length > 8 ? '▴ Show fewer' : ''; m.onclick = () => { cardLimit = cards.length > cardLimit ? cards.length : 8; renderCards(); }; };
   renderCards(); }
