@@ -202,7 +202,7 @@ _MIGRATIONS: dict[str, dict[str, str]] = {
                   "region": "TEXT", "ticker": "TEXT"},
     "signals": {"value_chain": "TEXT", "summary_zh": "TEXT", "deal_value_usd": "REAL", "capacity_mw": "REAL",
                 "capacity_kind": "TEXT", "project_stage": "TEXT", "location_name": "TEXT", "location_country": "TEXT",
-                "grid_region": "TEXT", "lat": "REAL", "lng": "REAL", "location_precision": "TEXT"},
+                "grid_region": "TEXT", "lat": "REAL", "lng": "REAL", "location_precision": "TEXT", "event_scope": "TEXT"},
     "relations": {"value_source": "TEXT"},
     "candidates": {"entity_type": "TEXT", "value_chain": "TEXT", "source": "TEXT NOT NULL DEFAULT 'llm'"},
 }
@@ -352,12 +352,12 @@ def save_extraction(conn: sqlite3.Connection, signal_id: int, data: dict[str, An
     conn.execute(
         """UPDATE signals SET status='extracted', relevant=?, signal_type=?, value_chain=?, importance=?,
              summary=?, summary_zh=?, deal_value_usd=?, capacity_mw=?, capacity_kind=?, project_stage=?,
-             location_name=?, location_country=?, grid_region=?, lat=?, lng=?, location_precision=?,
+             location_name=?, location_country=?, grid_region=?, lat=?, lng=?, location_precision=?, event_scope=?,
              extracted_json=?, extracted_at=? WHERE id=?""",
         (1 if data.get("relevant") else 0, data.get("signal_type"), data.get("value_chain"), data.get("importance"),
          data.get("summary_en") or data.get("summary"), data.get("summary_zh"),
          data.get("deal_value_usd"), data.get("capacity_mw"), data.get("capacity_kind"), data.get("project_stage"),
-         loc.get("name"), loc.get("country"), loc.get("grid_region"), loc.get("lat"), loc.get("lng"), loc.get("precision"),
+         loc.get("name"), loc.get("country"), loc.get("grid_region"), loc.get("lat"), loc.get("lng"), loc.get("precision"), data.get("event_scope"),
          json.dumps(data, ensure_ascii=False), now_iso(), signal_id),
     )
 

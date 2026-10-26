@@ -28,7 +28,7 @@ PRIVATE_KEYS = {
 PUBLIC_FIELDS = {
     "signal": ("id", "title", "link", "source", "date", "signal_type", "value_chain", "importance", "summary",
                "deal_value_usd", "capacity_mw", "capacity_kind", "project_stage", "location_name", "location_country",
-               "grid_region", "lat", "lng", "location_precision", "company_slugs", "investor_slugs", "scope"),
+               "grid_region", "lat", "lng", "location_precision", "event_scope", "company_slugs", "investor_slugs", "scope"),
     "relation": ("id", "subject_slug", "subject_name", "object_slug", "object_name", "relation_type", "value_usd",
                  "capacity_mw", "term_years", "value_source", "confidence", "first_seen", "last_seen", "mentions", "source_url", "source"),
     "funding": ("id", "company_slug", "company_name", "value_chain", "date", "round_type", "amount_raw", "amount_usd",

@@ -134,6 +134,7 @@ class SignalExtraction(BaseModel):
     capacity_mw: Optional[float] = Field(default=None, description="Headline power figure in MW (1 GW = 1000 MW), else null")
     capacity_kind: Optional[str] = Field(default=None, description="What kind of MW capacity_mw is: 'nameplate' for generation/storage capacity, 'it_load' for data-center IT or critical load, 'grid' for transmission/interconnection capacity, else null")
     project_stage: Optional[str] = Field(default=None, description="Stage of the project or deal the article is mainly about: 'announced', 'contracted' (PPA/contract signed, financing closed), 'under_construction', 'operational', else null")
+    event_scope: Optional[str] = Field(default=None, description="'project' when capacity_mw refers to one named plant, campus, contract or deal; 'aggregate' when it is a market-wide total, forecast, pipeline, scenario or analyst estimate (e.g. '474 GW of grid requests', 'could need 30 GW'); null when there is no capacity figure")
     location: Optional[Location] = Field(default=None, description="Where the project, plant, campus or contract is physically located. Null if the article names no place.")
     entities: list[EntityMention] = Field(default_factory=list, description="Every organisation that acts in the article")
     investors: list[InvestorMention] = Field(default_factory=list)
@@ -174,7 +175,10 @@ RULES
   agreement is signed; 'under_construction' when ground has broken; 'operational' when energised or serving load.
 - value_source on each relation: 'disclosed' only when the parties themselves state the figure (filing, release,
   on-record executive); 'reported' when the article attributes it to sources or another outlet; 'estimated' otherwise.
-- location: the place of the asset or campus, not the company's headquarters."""
+- location: the place of the asset or campus, not the company's headquarters.
+- event_scope: market totals, forecasts, pipelines and scenarios are 'aggregate', never 'project'.
+- A relation's subject and object must both be named organisations (company, utility, agency, fund). Never use a place,
+  a project, a campus, or a placeholder like 'unnamed partner' as subject or object; omit the relation instead."""
 
 
 SYSTEM_PROMPT = build_system_prompt()

@@ -7,7 +7,7 @@
 <meta name="description" content="{{ brand.tagline_en }} A weekly radar of the power and infrastructure behind AI.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='.55' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2305080f'/%3E%3Cpath d='M35 8 15 36h15l-3 20 22-28H34l1-20z' fill='url(%23g)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 <script>{{ vendor_d3 }}</script>
 <script>{{ vendor_topojson }}</script>
 <style>
@@ -22,7 +22,7 @@ a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
 .wrap{max-width:1440px;margin:0 auto;padding:0 28px 48px}
 header{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 24px;padding:22px 0 14px;border-bottom:1px solid var(--line2)}
-header h1{margin:0;font-family:'Space Grotesk',Inter,sans-serif;font-size:18px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+header h1{margin:0;font-family:'IBM Plex Sans',Inter,sans-serif;font-size:18px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 header h1 .bolt{width:22px;height:22px;margin-right:10px;vertical-align:-5px}
 header .tag{color:var(--mute);font-size:13px;font-style:italic}
 header .ticker{margin-left:auto;display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:var(--mute);letter-spacing:.04em}
@@ -36,19 +36,21 @@ nav a{color:var(--mute);padding-bottom:3px}nav a:hover{color:var(--fg);text-deco
 .hero{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
 @media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}}
 .hero .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
-.hero .map{min-height:470px}
+.hero .map{min-height:0}
 .gh{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
 @media (max-width:980px){.hero,.gh{grid-template-columns:minmax(0,1fr)}}
 .eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);font-weight:600}
-.headline .rot{display:inline-block;position:relative;height:1.15em;overflow:hidden;vertical-align:bottom;min-width:7em;text-align:left}
-.headline .roll{display:block;transition:transform .55s cubic-bezier(.65,0,.2,1)}
-.headline .roll span{display:block;height:1.15em;line-height:1.15em;white-space:nowrap;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 8px rgba(124,92,255,.35)) drop-shadow(0 0 14px rgba(143,240,244,.22))}
-@media (prefers-reduced-motion:reduce){.headline .roll{transition:none}}
-.headline{font-family:'Space Grotesk',Inter,sans-serif;font-size:32px;font-weight:700;letter-spacing:-.01em;line-height:1.05;color:var(--fg);padding-bottom:2px}
+.headline .rot{display:inline-block;vertical-align:bottom;text-align:left}
+.headline .roll{display:grid}
+.headline .roll span{grid-area:1/1;line-height:1.15em;white-space:nowrap;opacity:0;transform:translateY(.35em);transition:opacity .45s ease,transform .5s cubic-bezier(.65,0,.2,1);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 8px rgba(124,92,255,.35)) drop-shadow(0 0 14px rgba(143,240,244,.22))}
+.headline .roll span.on{opacity:1;transform:none}
+.headline .roll span.off{opacity:0;transform:translateY(-.35em)}
+@media (prefers-reduced-motion:reduce){.headline .roll span{transition:none}}
+.headline{font-family:'IBM Plex Sans',Inter,sans-serif;font-size:32px;font-weight:700;letter-spacing:-.01em;line-height:1.05;color:var(--fg);padding-bottom:2px}
 .headline .rot{text-transform:lowercase}
 .lead{font-size:17px;color:var(--fg);font-weight:500}
 .lead2{font-size:14px;color:var(--mute)}
-#map .map{min-height:520px}
+#map .map{min-height:0}
 #map.full{position:fixed;inset:0;z-index:50;border-radius:0;margin:0;padding:24px 32px;overflow:auto;background:var(--bg)}
 #map.full .map{min-height:calc(100vh - 150px)}
 #map.full .map svg{height:calc(100vh - 170px);width:100%}
@@ -68,7 +70,7 @@ html{scroll-behavior:smooth}
 .panel.foldable.fold h2::before{transform:rotate(-90deg)}
 .panel.foldable h2:hover::before{background:var(--fg)}
 .panel h2 .toggle{display:none}
-.panel h2{margin:0;font-family:'Space Grotesk',Inter,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg);font-weight:700;display:flex;flex-wrap:wrap;align-items:baseline;gap:12px}
+.panel h2{margin:0;font-family:'IBM Plex Sans',Inter,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg);font-weight:700;display:flex;flex-wrap:wrap;align-items:baseline;gap:12px}
 .panel h2 .sub{font-weight:400;text-transform:none;letter-spacing:0;color:var(--mute);font-size:13px}
 .panel h2 .sub.mono{font-size:12px}
 .panel h2 .right{margin-left:auto;display:flex;gap:16px}
@@ -132,9 +134,9 @@ td.what{color:var(--mute);font-size:13px}
 .num{text-align:right;white-space:nowrap}
 .imp{letter-spacing:1px;color:var(--fg);font-size:12px}
 .imp .o{color:var(--line2)}
-.map{position:relative;min-height:380px;background:#070d19;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.map{position:relative;background:#070d19;border:1px solid var(--line);border-radius:6px;overflow:hidden}
 .map svg{display:block;width:100%;height:auto}
-.legend{position:absolute;right:10px;bottom:10px;font-size:11px;color:var(--mute);background:#0b1120ee;border-radius:4px;border:1px solid var(--line2);padding:6px 10px;line-height:1.8;letter-spacing:.02em}
+.legend{position:absolute;left:10px;bottom:8px;max-width:calc(100% - 20px);display:flex;flex-wrap:wrap;gap:1px 16px;font-size:11px;color:var(--mute);background:#0b1120d9;border-radius:4px;border:1px solid var(--line2);padding:5px 10px;line-height:1.6;letter-spacing:.02em;pointer-events:none;backdrop-filter:blur(4px)}
 .legend .sw{display:inline-block;width:9px;height:9px;border-radius:5px;vertical-align:-1px;margin-right:5px}
 .mapcount{position:absolute;left:10px;top:10px;font-size:10px;color:var(--mute);background:#0b1120cc;padding:3px 8px;border-radius:4px}
 .zoomctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px}
@@ -201,7 +203,7 @@ td .vs-d{color:var(--cyan)}td .vs-r{color:var(--mute)}td .vs-e{color:var(--dim)}
   .howto-btn{flex:none;margin-left:6px;padding:3px 8px;font-size:10px}
   .intro{padding:22px 0 4px}
   .headline{font-size:24px}
-  .headline .rot{min-width:0;display:inline}
+  .headline .rot{display:block}
   .lead{font-size:15px}
   .lead2{font-size:13px}
   .lead3{display:none}
@@ -218,8 +220,9 @@ td .vs-d{color:var(--cyan)}td .vs-r{color:var(--mute)}td .vs-e{color:var(--dim)}
   .tile .n{display:none}
   .statline{gap:10px 16px;font-size:12px}
   .fact{font-size:13px}
-  .hero .map,#map .map{min-height:300px}
-  .legend{position:static;margin-top:8px;border:0;background:transparent;padding:0;font-size:10px;line-height:1.6}
+  .hero .map,#map .map{min-height:0}
+  .legend{position:static;max-width:none;margin-top:6px;border:0;background:transparent;padding:0;font-size:10px;gap:1px 12px;backdrop-filter:none}
+  .mapcount{position:static;display:inline-block;margin-top:6px;font-size:9px;padding:2px 6px}
   .zoomctl{display:none}
   .fsbtn{display:none}
   .heat{grid-template-columns:96px repeat(8,minmax(0,1fr));gap:2px;font-size:10px}
@@ -269,6 +272,23 @@ td .vk{font-size:9px;color:var(--dim);letter-spacing:.04em;text-transform:upperc
 .introrow{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding-top:6px}
 .wtf{background:transparent;border:1px solid var(--line2);color:var(--fg);border-radius:4px;padding:6px 12px;font-size:12px;font-family:inherit;cursor:pointer}
 .wtf:hover{border-color:var(--blue)}
+.tour-dim{position:fixed;inset:0;background:rgba(3,6,14,.66);z-index:60;display:none}
+body.touring .tour-dim{display:block}
+body.touring .panel.tour-on{position:relative;z-index:61;box-shadow:0 0 0 2px var(--cyan),0 0 44px rgba(143,240,244,.22)}
+.tour-card{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:62;width:min(540px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:16px 18px 14px;box-shadow:0 14px 44px rgba(0,0,0,.55);display:none}
+body.touring .tour-card{display:block;animation:tourin .35s ease}
+@keyframes tourin{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+.tour-card .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);font-weight:600;margin-bottom:4px}
+.tour-card h4{margin:0 0 6px;font-family:'IBM Plex Sans',Inter,sans-serif;font-size:17px;letter-spacing:.02em}
+.tour-card p{margin:0 0 12px;font-size:13px;color:var(--mute);line-height:1.55}
+.tour-card .row{display:flex;gap:8px;align-items:center}
+.tour-card button{font-family:inherit;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-radius:4px;padding:6px 12px;cursor:pointer;border:1px solid var(--line2);background:transparent;color:var(--mute)}
+.tour-card button:hover{border-color:var(--accent);color:var(--fg)}
+.tour-card button.pri{background:var(--accent);color:#06101f;border-color:var(--accent)}
+.tour-card button.skip{margin-left:auto}
+.wtf.tourbtn{border-color:var(--accent);color:var(--accent)}
+@media (prefers-reduced-motion:reduce){body.touring .tour-card{animation:none}}
+
 .note-link{font-size:12px;color:var(--blue);border:1px solid rgba(77,141,255,.35);border-radius:4px;padding:6px 12px}
 .note-link:hover{text-decoration:none;border-color:var(--blue);background:rgba(77,141,255,.08)}
 .explain{display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;font-size:13px;color:var(--mute);line-height:1.6;padding:14px 0 4px;max-width:1200px}
@@ -284,12 +304,12 @@ td .vk{font-size:9px;color:var(--dim);letter-spacing:.04em;text-transform:upperc
   <span class="tag">{{ brand.tagline_en }}</span>
   <div class="ticker mono" id="ticker"></div>
 </header>
-<nav><a href="#numbers">Numbers</a><a href="#activity">Activity</a><a href="#deals">Deals</a><a href="#map">Map</a><a href="#circuits">Circuits</a><a href="#feed">Signals</a><a href="#panel">The Panel</a><a href="latest-report.md">Weekly report</a><button class="howto-btn" id="howto">How to read this board</button></nav>
+<nav><a href="#numbers">Numbers</a><a href="#activity">Activity</a><a href="#deals">Deals</a><a href="#map">Map</a><a href="#circuits">Circuits</a><a href="#feed">Signals</a><a href="#panel">The Panel</a></nav>
 
 <div class="intro"><div class="headline">Tracking the Current in <span class="rot"><span class="roll" id="roll"></span></span></div>
   <div class="lead">Who powers AI, who pays, and why now.</div>
   <div class="lead2">A weekly radar of the electricity behind AI compute · updated Mondays · every line links to its source</div>
-  <div class="introrow"><button class="wtf" id="wtf">What am I looking at? ▾</button><a class="note-link" id="notelink" href="latest-report.md">This week's note → On the Board</a></div>
+  <div class="introrow"><button class="wtf" id="wtf">What am I looking at? ▾</button><button class="wtf tourbtn" id="tour">▶ How to read this board</button></div>
   <div class="explain" id="explain">
     <div><b>What this is</b>AI data centers need enormous amounts of electricity, and getting it has become the hard part: turbines are back-ordered, grid connections take years, and tech companies are signing 20-year deals with nuclear plants. This board follows that story every week — who supplies the power, who pays for it, and what changed.</div>
     <div><b>Where the data comes from</b>Public news and company announcements, collected automatically each week for about forty companies across the power and data-center supply chain. An AI model reads each article and records the layer, the type of event, the MW and dollar figures, the location and who dealt with whom. A human analyst reviews the most important items. Every line links to its source.</div>
@@ -309,7 +329,7 @@ td .vk{font-size:9px;color:var(--dim);letter-spacing:.04em;text-transform:upperc
     <div class="fact" id="fact4"></div>
     <div class="body">
     
-    <div class="map" id="mapbox"><div class="mapcount mono" id="mapcount"></div><div class="legend"><span class="sw" style="background:var(--load)"></span>Data center · IT load (MW)<br><span class="sw" style="border:2px solid var(--gen);background:transparent"></span>Generation · nameplate (MW)<br>faded = announced · solid = contracted · ring = operational<br><span class="sw" style="border:1px dashed var(--violet);background:transparent"></span>dashed violet = region/country only (dot at its centre)<br><span class="sw" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></span>glow = this week · <span class="sw" style="background:var(--violet2);box-shadow:0 0 8px var(--violet2)"></span>last week</div><div class="zoomctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zreset" aria-label="Reset zoom">⟲</button></div></div>
+    <div class="map" id="mapbox"><div class="mapcount mono" id="mapcount"></div><div class="legend"><span><i class="sw" style="background:var(--load)"></i>Data center · IT load</span><span><i class="sw" style="border:2px solid var(--gen);background:transparent"></i>Generation · nameplate</span><span>faded = announced · solid = contracted · ring = operational</span><span><i class="sw" style="border:1px dashed var(--violet);background:transparent"></i>dashed = region/country only</span><span><i class="sw" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></i>this week · <i class="sw" style="background:var(--violet2);box-shadow:0 0 8px var(--violet2)"></i>last week</span></div><div class="zoomctl"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zreset" aria-label="Reset zoom">⟲</button></div></div>
   </div>
   </section>
 </div>
@@ -335,7 +355,7 @@ td .vk{font-size:9px;color:var(--dim);letter-spacing:.04em;text-transform:upperc
     
     <div class="circuit" id="circuitbox"></div>
     <div class="clist" id="clist"></div>
-    <div class="clegend"><span><i class="ln"></i>buys power from / supplies to</span><span><i class="ln dash"></i>invests in</span><span><i class="ln new"></i>new this week</span><span><i class="nd grad"></i>demand side</span><span><i class="nd mid"></i>compute &amp; development</span><span><i class="nd sup"></i>supply side</span><span>line weight = deal size · number on the line = MW · $ · years</span></div>
+    <div class="clegend"><span><i class="ln"></i>buys power from / supplies to</span><span><i class="ln dash"></i>invests in</span><span><i class="ln new"></i>new this week</span><span><i class="nd grad"></i>hyperscalers &amp; chips</span><span><i class="nd mid"></i>AI labs · neoclouds · developers</span><span><i class="nd sup"></i>power &amp; equipment</span><span>line weight = deal size · number on the line = MW · $ · years</span></div>
   </div>
   </section>
 </div>
@@ -377,6 +397,7 @@ td .vk{font-size:9px;color:var(--dim);letter-spacing:.04em;text-transform:upperc
 <div class="tip" id="tip"></div>
 <aside id="drawer" aria-hidden="true"><div class="dh"><span id="dtitle">Signals</span><button id="dclose" aria-label="Close">✕</button></div><div class="dcount mono" id="dcount"></div><div class="dbody"><table id="drawertable"></table></div><div class="dfoot"><a href="#feed" id="dall">Open the full feed with these filters →</a></div></aside>
 <div id="dmask"></div>
+<div class="tour-dim"></div><div class="tour-card" id="tourcard" role="dialog" aria-live="polite"><div class="k"></div><h4></h4><p></p><div class="row"><button class="back">← Back</button><button class="pri next">Next →</button><button class="skip">Skip tour</button></div></div>
 <button id="totop" aria-label="Back to top" title="Back to top">↑</button>
 
 <script id="data" type="application/json">{{ data_json }}</script>
@@ -407,7 +428,27 @@ const tip = document.getElementById('tip');
 const showTip = (ev, html) => { tip.innerHTML = html; tip.style.display = 'block'; tip.style.left = Math.min(ev.clientX + 14, window.innerWidth - 340) + 'px'; tip.style.top = (ev.clientY + 14) + 'px'; };
 const hideTip = () => tip.style.display = 'none';
 document.querySelectorAll('.panel h2 .info').forEach(i => { const q = document.createElement('div'); q.className = 'q'; q.textContent = i.title; const h = i.closest('h2'); h.parentNode.insertBefore(q, h.nextSibling); i.dataset.tip = i.title; i.removeAttribute('title'); i.addEventListener('mousemove', ev => showTip(ev, '<div class="tt-r">' + esc(i.dataset.tip) + '</div>')); i.addEventListener('mouseleave', hideTip); });
-document.getElementById('howto').onclick = () => document.body.classList.toggle('howto');
+
+const TOUR = [
+  ['numbers', 'This week in numbers', 'Four numbers, one week. Generation (nameplate MW) and data-center demand (IT load MW) are different units and are never added together. Hover any dotted term for a definition.'],
+  ['map', 'Committed capacity', 'Each dot is a project from the last 8 weeks, sized by MW. Filled = data center, hollow = generation. A dashed outline means the article only named a region. Scroll to zoom, click a dot to open the source.'],
+  ['activity', 'Activity by layer', 'Eleven layers of the supply chain across eight weeks. The number is distinct events; the shade is how that compares with the layer\'s own average, so a quiet layer can light up. Click a cell to see its signals.'],
+  ['deals', 'Biggest deals', 'This week first, then the 90-day record. The verb says who did what to whom; the colour of a value says whether it was stated by the parties, reported, or estimated.'],
+  ['circuits', 'Circuits', 'Who buys power from whom, who invests in whom. Solid lines move electricity or equipment, dashed lines move money, and the number sits on the line.'],
+  ['feed', 'Signal feed & The Panel', 'Every classified article from the last 90 days, with filters, and the companies the board follows. Clicking anywhere above opens a filtered slice of this in a side drawer.'],
+];
+let ti = -1; const tcard = document.getElementById('tourcard');
+function tourStep(i){ document.querySelectorAll('.panel.tour-on').forEach(p => p.classList.remove('tour-on'));
+  if (i < 0 || i >= TOUR.length) { document.body.classList.remove('touring', 'howto'); ti = -1; return; }
+  ti = i; const [id, h, t] = TOUR[i]; const el = document.getElementById(id); el.classList.remove('fold'); el.classList.add('tour-on'); document.body.classList.add('touring', 'howto');
+  tcard.querySelector('.k').textContent = `Step ${i + 1} of ${TOUR.length}`; tcard.querySelector('h4').textContent = h; tcard.querySelector('p').textContent = t;
+  tcard.querySelector('.next').textContent = i === TOUR.length - 1 ? 'Done ✓' : 'Next →'; tcard.querySelector('.back').disabled = i === 0;
+  tcard.style.animation = 'none'; void tcard.offsetHeight; tcard.style.animation = '';
+  el.scrollIntoView({ behavior: 'smooth', block: i === TOUR.length - 1 ? 'start' : 'center' }); }
+document.getElementById('tour').onclick = () => tourStep(0);
+tcard.querySelector('.next').onclick = () => tourStep(ti + 1); tcard.querySelector('.back').onclick = () => tourStep(Math.max(0, ti - 1)); tcard.querySelector('.skip').onclick = () => tourStep(-1);
+document.querySelector('.tour-dim').onclick = () => tourStep(-1);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && ti >= 0) tourStep(-1); });
 document.getElementById('wtf').onclick = () => { const e = document.getElementById('explain'); e.classList.toggle('open'); document.getElementById('wtf').textContent = e.classList.contains('open') ? 'What am I looking at? ▴' : 'What am I looking at? ▾'; };
 const drawer = document.getElementById('drawer'), dmask = document.getElementById('dmask');
 function openDrawer(title){ document.getElementById('dtitle').textContent = title; renderFeed(document.getElementById('drawertable')); drawer.classList.add('open'); dmask.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); }
@@ -416,9 +457,8 @@ document.getElementById('dclose').onclick = closeDrawer; dmask.onclick = closeDr
 document.getElementById('dall').onclick = () => { closeDrawer(); unfold('feed'); renderFeed(); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 { const words = ['electricity', 'capital flow', 'power contracts', 'grid capacity', 'policy', 'what is happening now']; const roll = document.getElementById('roll');
-  roll.innerHTML = words.concat([words[0]]).map(w => `<span>${w}</span>`).join(''); let wi = 0;
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => { wi++; roll.style.transform = `translateY(-${wi * 1.15}em)`;
-    if (wi === words.length) setTimeout(() => { roll.style.transition = 'none'; wi = 0; roll.style.transform = 'translateY(0)'; void roll.offsetHeight; roll.style.transition = ''; }, 580); }, 2400); }
+  roll.innerHTML = words.map(w => `<span>${w}</span>`).join(''); const sp = [...roll.children]; let wi = 0; sp[0].classList.add('on');
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) setInterval(() => { const prev = wi; sp[prev].classList.replace('on', 'off'); wi = (wi + 1) % words.length; sp[wi].classList.remove('off'); sp[wi].classList.add('on'); setTimeout(() => sp[prev].classList.remove('off'), 520); }, 2400); }
 document.querySelectorAll('.panel h2').forEach(h => { const lead = document.createElement('span'); lead.className = 'leader'; const anchor = h.querySelector('.fsbtn, .right, .toggle'); if (anchor) h.insertBefore(lead, anchor); else h.appendChild(lead); });
 document.querySelectorAll('.panel.foldable h2').forEach(h => h.addEventListener('click', ev => { if (ev.target.closest('.right, .fsbtn, .info, select, input')) return; h.closest('.panel').classList.toggle('fold'); }));
 const fsbtn = document.getElementById('fsbtn'); fsbtn.onclick = () => { const m = document.getElementById('map'); m.classList.toggle('full'); fsbtn.textContent = m.classList.contains('full') ? '✕ Close' : '⤢ Full screen'; };
@@ -453,11 +493,27 @@ D.signals.forEach(s => { s.week = s.date ? isoWeek(s.date) : null; s.companies =
 D.relations.forEach(r => { r.week_first = r.first_seen ? isoWeek(r.first_seen.slice(0,10)) : null; });
 
 // ---- event de-dup: one deal reported five times is one event ----
-function eventKey(s){ const slugs = (s.company_slugs||[]).slice().sort().join('+'); const mw = s.capacity_mw ? Math.round(s.capacity_mw/50)*50 : '';
-  return (slugs || (s.title||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').split(' ').slice(0,6).join(' ')) + '|' + mw + '|' + (s.value_chain||'') + '|' + s.week; }
+function eventKey(s){ const slugs = (s.company_slugs||[]).slice().sort().join('+'); const mw = s.capacity_mw ? Math.round(s.capacity_mw/100)*100 : '';
+  // the same deal reported by several outlets: same layer, same week, same MW (to 100) and the same MW kind
+  if (mw) return 'mw|' + mw + '|' + (s.capacity_kind||'') + '|' + (s.value_chain||'') + '|' + s.week;
+  return (slugs || (s.title||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').split(' ').slice(0,6).join(' ')) + '|' + (s.value_chain||'') + '|' + s.week; }
 const events = new Map();
 D.signals.forEach(s => { if (!s.week) return; const k = eventKey(s); const e = events.get(k); if (!e || s.importance > e.importance) events.set(k, s); });
 const EV = [...events.values()];
+// Only project-level events count toward MW: a named deal, build-out or contract at or below 10 GW. Market-wide
+// totals, forecasts and analyst scenarios ("474 GW of grid requests", "could need 30 GW") are excluded.
+const AGG_RE = /forecast|outlook|scenario|could |may |might |warns|predict|more than|pipeline|requests|estimate|total|nationwide|industry|across the|\bus\b.*\bgw\b|rise to|surge/i;
+const PROJECT_TYPES = new Set(['offtake','capex','partnership','m_and_a','supply_chain','product','funding']);
+const isProject = e => e.capacity_mw && e.capacity_mw <= 10000 && PROJECT_TYPES.has(e.signal_type) && !AGG_RE.test(e.title || '') && (e.event_scope ? e.event_scope === 'project' : true);
+const PV = EV.filter(isProject);
+const pvWeek = w => PV.filter(e => e.week === w);
+// relations must join two organisations; places, projects and unnamed counterparties are dropped
+const BAD_NAME = /data cent|campus|county|project|facility|plant\b|not stated|unnamed|various|\(|site\b|^(alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new mexico|new york|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|washington|west virginia|wisconsin|wyoming|united states|us|usa|uk|europe|india|china|japan|korea|finland|ireland|australia|canada|mexico|brazil|germany|france|spain|norway|sweden|denmark|netherlands|malaysia|singapore|taiwan|saudi arabia|uae|qatar)$/i;
+const ORG_RE = /\b(inc|corp|co|energy|power|capital|partners|llc|ltd|plc|group|technologies|technology|electric|utilities|utility|systems|holdings|ventures|labs|cloud|data|nuclear|solar|wind|grid|gas|bank|fund|authority|commission|department|ministry|university|institute|realty|infrastructure|industries|networks|semiconductor|devices|motors|ai|digital|global|international|services|resources|renewables|generation|transmission|cooperative|reit)\b/i;
+const okName = (n, slug) => n && n.length <= 40 && !BAD_NAME.test(n.trim()) && (slug || ORG_RE.test(n) || byCompany[n.toLowerCase().replace(/[^a-z0-9]+/g,'-')]);
+D.relations = D.relations.filter(r => okName(r.subject_name, r.subject_slug) && okName(r.object_name, r.object_slug));
+// the same deal recorded from both sides ("A buys power from B" and "B supplies to A") is one relation
+{ const seen = new Map(); D.relations = D.relations.filter(r => { const k = [r.subject_name, r.object_name].sort().join('|') + '|' + Math.round((r.capacity_mw||0)/100) + '|' + Math.round((r.value_usd||0)/1e8); if (seen.has(k)) return false; seen.set(k, 1); return true; }); }
 const evWeek = w => EV.filter(e => e.week === w);
 const sigWeek = w => D.signals.filter(s => s.week === w);
 
@@ -465,9 +521,10 @@ const sigWeek = w => D.signals.filter(s => s.week === w);
 const sum = (arr, f) => arr.reduce((a, x) => a + (f(x) || 0), 0);
 function numbers(w){
   const ev = evWeek(w), sg = sigWeek(w);
-  const gen = sum(ev.filter(e => e.capacity_kind === 'nameplate' && (e.signal_type === 'offtake' || e.project_stage === 'contracted')), e => e.capacity_mw);
-  const load = sum(ev.filter(e => e.capacity_kind === 'it_load'), e => e.capacity_mw);
-  const loadC = sum(ev.filter(e => e.capacity_kind === 'it_load' && (e.project_stage === 'contracted' || e.project_stage === 'under_construction' || e.project_stage === 'operational')), e => e.capacity_mw);
+  const pv = pvWeek(w);
+  const gen = sum(pv.filter(e => e.capacity_kind === 'nameplate' && (e.signal_type === 'offtake' || e.project_stage === 'contracted')), e => e.capacity_mw);
+  const load = sum(pv.filter(e => e.capacity_kind === 'it_load'), e => e.capacity_mw);
+  const loadC = sum(pv.filter(e => e.capacity_kind === 'it_load' && (e.project_stage === 'contracted' || e.project_stage === 'under_construction' || e.project_stage === 'operational')), e => e.capacity_mw);
   const rels = D.relations.filter(r => r.week_first === w);
   const dealsByType = {}; rels.forEach(r => { dealsByType[r.relation_type] = (dealsByType[r.relation_type]||0) + 1; });
   const capex = ev.filter(e => e.signal_type === 'capex').length;
@@ -491,7 +548,6 @@ const prevZ = Object.fromEntries(LAYERS.filter(l => l !== 'other').map(l => { co
 const prevHot = Object.entries(prevZ).sort((a,b)=>b[1]-a[1])[0]?.[0];
 
 document.getElementById('ticker').innerHTML = `<span>${D.week.replace('-W',' · W')}</span><span><b>${N.signals}</b> signals from <b>${new Set(sigWeek(D.week).map(s=>s.source)).size}</b> sources</span><span><b>${N.deals}</b> deals</span><span><b>${N.circuits}</b> new circuits</span><span>updated ${D.generated_at.slice(0,10)}</span><span>next Mon ${(() => { const d = new Date(D.generated_at); const dow = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() + (7 - dow)); return d.toISOString().slice(5,10).replace('-', '/'); })()} 08:00 TPE</span>`;
-if (D.weekly_view && D.weekly_view.en) { const first = D.weekly_view.en.split(/\n+/)[0].slice(0, 90); document.getElementById('notelink').textContent = 'This week\'s note → ' + first + (first.length >= 90 ? '…' : ''); }
 document.getElementById('srcnote').textContent = '· based on ' + new Set(D.signals.map(s => s.source)).size + ' sources';
 
 const g = delta(N.gen, P.gen, fmtMwNum), lo = delta(N.load, P.load, fmtMwNum), dl = delta(N.deals, P.deals, v => v);
@@ -507,10 +563,10 @@ document.getElementById('tiles2').innerHTML = `
 
 // fact 1
 { const top = evWeek(D.week).sort((a,b) => (b.importance - a.importance) || ((b.capacity_mw||0)-(a.capacity_mw||0)))[0];
-  const byLayer = {}; evWeek(D.week).forEach(e => { byLayer[e.value_chain] = (byLayer[e.value_chain]||0) + (e.capacity_mw||0); });
+  const byLayer = {}; pvWeek(D.week).forEach(e => { byLayer[e.value_chain] = (byLayer[e.value_chain]||0) + (e.capacity_mw||0); });
   const lead = Object.entries(byLayer).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById('fact1').textContent = !N.events ? 'A quiet week: no signals above the bar yet.' :
-    lead && lead[1] > 0 ? `${L('value_chain', lead[0])} led the week: ${fmtMwNum(lead[1])} across ${(n => n + (n===1?' event':' events'))(evWeek(D.week).filter(e=>e.value_chain===lead[0]).length)}.` :
+    lead && lead[1] > 0 ? `${L('value_chain', lead[0])} led the week: ${fmtMwNum(lead[1])} across ${(n => n + (n===1?' project':' projects'))(pvWeek(D.week).filter(e=>e.value_chain===lead[0]).length)}.` :
     top ? `Biggest signal this week: ${top.title}.` : ''; }
 
 // ---- activity grid ----
@@ -536,7 +592,7 @@ const relTypeTab = r => r.relation_type === 'buys_power_from' ? 'PPA' : r.relati
 let dealSort = 'size';
 function dealRows(tab){
   let rows = D.relations.map(r => ({kind:'rel', r, sig: relByUrl[r.source_url], tab: relTypeTab(r), size: r.capacity_mw, value: r.value_usd, date: (r.first_seen||'').slice(0,10), isNew: weekRelIds.has(r.id) || r.week_first === D.week}));
-  const capexSig = EV.filter(e => e.signal_type === 'capex' && e.capacity_mw).map(e => ({kind:'sig', sig: e, tab:'Capex', size: e.capacity_mw, value: e.deal_value_usd, date: e.date, isNew: e.week === D.week}));
+  const capexSig = PV.filter(e => e.signal_type === 'capex' && (e.companies||[]).length).map(e => ({kind:'sig', sig: e, tab:'Capex', size: e.capacity_mw, value: e.deal_value_usd, date: e.date, isNew: e.week === D.week}));
   rows = rows.concat(capexSig);
   if (tab !== 'All') rows = rows.filter(x => x.tab === tab);
   const key = x => dealSort === 'date' ? x.date : dealSort === 'value' ? (x.value||0) : (x.size||0);
@@ -572,17 +628,18 @@ function renderDeals(tab){
 // ---- map ----
 function renderMap(kind){
   const box = document.getElementById('mapbox'); box.querySelectorAll('svg').forEach(s => s.remove());
-  const W = 900, H = 460;
+  const W = 900, H = 390;
   const svg = d3.select(box).insert('svg', ':first-child').attr('viewBox', `0 0 ${W} ${H}`).attr('preserveAspectRatio', 'xMidYMid meet');
   const world = JSON.parse(document.getElementById('world').textContent);
   const land = topojson.feature(world, world.objects.countries);
-  const proj = d3.geoNaturalEarth1().fitSize([W, H], {type:'Sphere'});
+  const landMain = {type:'FeatureCollection', features: land.features.filter(f => String(f.id) !== '010')};
+  const proj = d3.geoNaturalEarth1().fitExtent([[0, 0], [W, H]], landMain);
   const path = d3.geoPath(proj);
   const defs = svg.append('defs'); const f = defs.append('filter').attr('id', 'glow').attr('x', '-100%').attr('y', '-100%').attr('width', '300%').attr('height', '300%'); f.append('feGaussianBlur').attr('stdDeviation', 6);
   const zoomG = svg.append('g');
   zoomG.append('path').datum({type:'Sphere'}).attr('d', path).attr('fill', '#070d19');
-  zoomG.append('g').selectAll('path').data(land.features).join('path').attr('d', path).attr('fill', '#121b30').attr('stroke', '#070d19').attr('stroke-width', .5);
-  const pts = EV.filter(e => e.lat != null && e.lng != null && e.capacity_mw && WEEKS.includes(e.week) && (kind === 'all' || e.capacity_kind === kind));
+  zoomG.append('g').selectAll('path').data(landMain.features).join('path').attr('d', path).attr('fill', '#121b30').attr('stroke', '#070d19').attr('stroke-width', .5);
+  const pts = PV.filter(e => e.lat != null && e.lng != null && WEEKS.includes(e.week) && (kind === 'all' || e.capacity_kind === kind));
   const r = d3.scaleSqrt().domain([0, Math.max(100, d3.max(pts, p => p.capacity_mw) || 100)]).range([2, 22]);
   const stageCls = s => s === 'operational' ? 'stage2' : s === 'contracted' || s === 'under_construction' ? 'stage1' : 'stage0';
   const gglow = zoomG.append('g').attr('pointer-events', 'none'); const gpts = zoomG.append('g');
@@ -606,7 +663,7 @@ function renderMap(kind){
   { const agg = {}; pts.forEach(p => { const k = p.grid_region || p.location_country || 'n/a'; agg[k] = agg[k] || {g:0,l:0}; if (p.capacity_kind === 'it_load') agg[k].l += p.capacity_mw; else agg[k].g += p.capacity_mw; });
     const top = Object.entries(agg).sort((a,b) => (b[1].g + b[1].l) - (a[1].g + a[1].l)).slice(0, 6);
     document.getElementById('regions').innerHTML = top.length ? `<span>By ${T('grid region')}, 8 weeks:</span>` + top.map(([k,v]) => `<span class="r"><b>${esc(k)}</b><span class="mono">${v.g ? fmtMwNum(v.g) + ' gen' : ''}${v.g && v.l ? ' · ' : ''}${v.l ? fmtMwNum(v.l) + ' load' : ''}</span></span>`).join('') : ''; }
-  const nAll = EV.filter(e => e.capacity_mw && WEEKS8.includes(e.week)).length, nApprox = pts.filter(p => p.location_precision === 'region' || p.location_precision === 'country').length;
+  const nAll = PV.filter(e => WEEKS8.includes(e.week)).length, nApprox = pts.filter(p => p.location_precision === 'region' || p.location_precision === 'country').length;
   document.getElementById('mapcount').textContent = `${pts.length} placed (${nApprox} approximate) · ${nAll - pts.length} without a location`;
   document.getElementById('fact4').textContent = !pts.length ? 'No located projects in the last 8 weeks yet — locations arrive with extraction.' :
     tot ? (pct => `${pct >= 50 ? 'Most' : pct + '%'} of the capacity announced in the last two weeks${pct >= 50 ? ' (' + pct + '%)' : ''} sits in ${top2.map(x=>x[0]).join(' and ')}.`)(Math.round(top2.reduce((a,x)=>a+x[1],0)/tot*100)) : `${pts.length} located projects in the last 8 weeks.`;
@@ -615,7 +672,7 @@ document.querySelectorAll('#map .chip').forEach(c => c.onclick = () => { documen
 renderMap('all');
 
 // ---- circuits: fixed three-column layout ----
-function column(slug, name){ const c = byCompany[slug]; if (!c) return 1; if (c.value_chain === 'compute_demand' && c.entity_type !== 'neocloud') return 0; if (['generation_nuclear','generation_other','storage','offtake_markets','transmission_grid','dc_physical'].includes(c.value_chain)) return 2; return 1; }
+function column(slug, name){ const c = byCompany[slug]; if (!c) return 1; if (c.entity_type === 'ai_lab' || c.entity_type === 'neocloud') return 1; if (c.value_chain === 'compute_demand') return 0; if (['generation_nuclear','generation_other','storage','offtake_markets','transmission_grid','dc_physical'].includes(c.value_chain)) return 2; return 1; }
 function renderCircuits(rel){
   const box = document.getElementById('circuitbox'); box.innerHTML = '';
   let rels = D.relations.filter(r => rel === 'all' || r.relation_type === rel).filter(r => r.relation_type !== 'regulates');
@@ -629,7 +686,7 @@ function renderCircuits(rel){
   cols.forEach((c, ci) => c.forEach((n, i) => { n.x = X[ci]; n.y = 70 + (H - 100) * (c.length === 1 ? .5 : i / (c.length - 1)); }));
   const svg = d3.select(box).append('svg').attr('viewBox', `0 0 ${W} ${H}`);
   const gd = svg.append('defs').append('linearGradient').attr('id', 'nodegrad').attr('x1', 0).attr('x2', 1).attr('y1', 0).attr('y2', 1); gd.append('stop').attr('offset', '0%').attr('stop-color', '#5b3fd1'); gd.append('stop').attr('offset', '100%').attr('stop-color', '#2a5cd4');
-  [['DEMAND', X[0]], ['COMPUTE / DEVELOPMENT', X[1]], ['SUPPLY', X[2]]].forEach(([t,x]) => svg.append('text').attr('x', x).attr('y', 22).attr('text-anchor', 'middle').attr('fill', 'var(--mute)').attr('font-size', 11).attr('font-weight', 700).attr('letter-spacing', 2.5).attr('font-family', 'Inter, sans-serif').text(t));
+  [['HYPERSCALERS & CHIPS', X[0]], ['AI LABS · NEOCLOUDS · DEVELOPERS', X[1]], ['POWER & EQUIPMENT', X[2]]].forEach(([t,x]) => svg.append('text').attr('x', x).attr('y', 22).attr('text-anchor', 'middle').attr('fill', 'var(--mute)').attr('font-size', 11).attr('font-weight', 700).attr('letter-spacing', 2.5).attr('font-family', 'Inter, sans-serif').text(t));
   const maxV = d3.max(rels, r => (r.value_usd||0) + (r.capacity_mw||0)*1e6) || 1;
   const edges = svg.append('g'), nodesG = svg.append('g'), labels = svg.append('g'); const placed = [];
   rels.forEach((r, ei) => { const a = nodes.get(r.subject_slug || r.subject_name), b = nodes.get(r.object_slug || r.object_name); const isNew = r.week_first === D.week;
